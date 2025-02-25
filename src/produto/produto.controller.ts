@@ -6,6 +6,7 @@ import {
   Param,
   Post,
   Put,
+  Query,
 } from '@nestjs/common';
 import { randomUUID } from 'crypto';
 
@@ -37,8 +38,10 @@ export class ProdutoController {
   }
 
   @Get()
-  async listaTodos() {
-    return this.produtoService.listProdutos();
+  async listarTodos(
+    @Query() categoria? : string
+  ) {
+    return this.produtoService.listProdutos(categoria);
   }
 
   @Put('/:id')

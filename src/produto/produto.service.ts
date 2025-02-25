@@ -1,47 +1,38 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { ListaProdutoDTO } from './dto/ListaProduto.dto';
 import { ProdutoEntity } from './produto.entity';
-import { Repository } from 'typeorm';
 import { AtualizaProdutoDTO } from './dto/AtualizaProduto.dto';
+import { ProdutoRepository } from './produto.repository';
 
 @Injectable()
 export class ProdutoService {
-  constructor(
-    @InjectRepository(ProdutoEntity)
-    private readonly produtoRepository: Repository<ProdutoEntity>,
-  ) {}
+  constructor(private produtoRepository: ProdutoRepository) {}
 
   async criaProduto(produtoEntity: ProdutoEntity) {
-    await this.produtoRepository.save(produtoEntity);
+    await this.produtoRepository.salvar(produtoEntity);
   }
 
-  async listProdutos() {
-    const produtosSalvos = await this.produtoRepository.find({
+  async listProdutos(categoria? : string) {
+    let whereClause: any = {};
+    if (categoria) {
+      whereClause = categoria;
+    }
+
+    return await this.produtoRepository.listar({
       relations: {
         imagens: true,
         caracteristicas: true,
       },
+      where : whereClause
     });
-    const produtosLista = produtosSalvos.map(
-      (produto) =>
-        new ListaProdutoDTO(
-          produto.id,
-          produto.nome,
-          produto.caracteristicas,
-          produto.imagens,
-        ),
-    );
-    return produtosLista;
   }
 
   async atualizaProduto(id: string, novosDados: AtualizaProdutoDTO) {
-    const entityName = await this.produtoRepository.findOneBy({ id });
+    const entityName = await this.produtoRepository.atualizar(id, novosDados);
     Object.assign(entityName, novosDados);
-    await this.produtoRepository.save(entityName);
+    await this.produtoRepository.salvar(entityName);
   }
 
   async deletaProduto(id: string) {
-    await this.produtoRepository.delete(id);
+    await this.produtoRepository.remover(id);
   }
 }
