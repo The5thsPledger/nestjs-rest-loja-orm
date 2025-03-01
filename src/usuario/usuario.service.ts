@@ -59,6 +59,14 @@ export class UsuarioService {
   }
 
   async deletaUsuario(id: string) {
+    try {
+      await this.listUsuarios(null, id);
+    }
+    catch (exception) {
+      if (exception instanceof NotFoundException) {
+        throw new BadRequestException(exception.message);
+      }
+    }
     await this.usuarioRepository.deletar(id);
   }
 }

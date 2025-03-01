@@ -1,7 +1,7 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import { Injectable, NotFoundException, PreconditionFailedException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { UsuarioEntity } from "./usuario.entity";
-import { Repository } from "typeorm";
+import { QueryFailedError, Repository } from "typeorm";
 import { AtualizaUsuarioDTO } from "./dto/AtualizaUsuario.dto";
 
 @Injectable()
@@ -25,6 +25,7 @@ export class UsuarioRepository {
             if (id) {
                 msg.push(' com o id ' + id);
             }
+
             usuario.push(await this.usuarioRepository.findOne({ where: {
                 email : email,
                 id    : id
