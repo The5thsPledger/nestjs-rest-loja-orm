@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import {
   registerDecorator,
   ValidationArguments,
@@ -17,10 +17,23 @@ export class EmailEhUnicoValidator implements ValidatorConstraintInterface {
     value: any,
     _validationArguments?: ValidationArguments,
   ): Promise<boolean> {
-    const usuarioComEmailExiste = await this.usuarioService.buscaPorEmail(
-      value,
-    );
-    return !usuarioComEmailExiste;
+    try {
+      const usuarioComEmailExiste = await this.usuarioService.listUsuarios(value);
+      if (usuarioComEmailExiste) {
+        throw new BadRequestException('Email ' + value + ' já está em uso.');
+      }
+      else {
+        return !usuarioComEmailExiste;
+      }
+    }
+    catch (exception) {
+      if (exception instanceof NotFoundException) {
+        return true;
+      }
+      else {
+        throw exception;
+      }
+    }
   }
 }
 
