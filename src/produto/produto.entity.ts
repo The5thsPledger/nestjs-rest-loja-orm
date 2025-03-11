@@ -11,14 +11,15 @@ import {
 import { ProdutoImagemEntity } from './produto-imagem.entity';
 import { ProdutoCaracteristicaEntity } from './produto-caracteristica.entity';
 import { FornecedorEntity } from 'src/fornecedor/fornecedor.entity';
+import { UsuarioEntity } from 'src/usuario/usuario.entity';
 
 @Entity({ name: 'produtos' })
 export class ProdutoEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ name: 'usuario_id', length: 100, nullable: false })
-  usuarioId: string;
+  @ManyToOne(() =>UsuarioEntity, (usuario) => usuario.id, { nullable: false })
+  usuario: UsuarioEntity;
 
   @Column({ name: 'nome', length: 100, nullable: false })
   nome: string;

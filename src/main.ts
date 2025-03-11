@@ -6,6 +6,9 @@ import { CustomExceptionFilter } from './exception.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
+  useContainer(app.select(AppModule), { fallbackOnErrors: true });
+  
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true,
@@ -15,7 +18,6 @@ async function bootstrap() {
   );
   app.useGlobalFilters(new CustomExceptionFilter());
 
-  useContainer(app.select(AppModule), { fallbackOnErrors: true });
   await app.listen(3000);
 }
 bootstrap();

@@ -1,3 +1,4 @@
+import { PerfilEntity } from 'src/perfil/perfil.entity';
 import {
   Entity,
   Column,
@@ -5,6 +6,7 @@ import {
   UpdateDateColumn,
   DeleteDateColumn,
   PrimaryGeneratedColumn,
+  ManyToMany,
 } from 'typeorm';
 
 @Entity({ name: 'usuarios' })
@@ -29,4 +31,7 @@ export class UsuarioEntity {
 
   @DeleteDateColumn({ name: 'deleted_at' })
   deletedAt: string;
+
+  @ManyToMany(() => PerfilEntity)
+  perfis: PerfilEntity[]
 }

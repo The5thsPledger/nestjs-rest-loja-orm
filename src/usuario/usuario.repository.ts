@@ -8,7 +8,7 @@ import { AtualizaUsuarioDTO } from "./dto/AtualizaUsuario.dto";
 export class UsuarioRepository {
     constructor(
         @InjectRepository(UsuarioEntity)
-        private readonly usuarioRepository: Repository<UsuarioEntity>,
+        private readonly usuarioRepository: Repository<UsuarioEntity>
     ) {}
     
     async salvar(usuarioEntity: UsuarioEntity) {

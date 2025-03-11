@@ -1,5 +1,4 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
 import { ListaUsuarioDTO } from './dto/ListaUsuario.dto';
 import { UsuarioEntity } from './usuario.entity';
 import { AtualizaUsuarioDTO } from './dto/AtualizaUsuario.dto';
@@ -9,9 +8,7 @@ import { v4 as uuid } from 'uuid';
 
 @Injectable()
 export class UsuarioService {
-  constructor(
-    private readonly usuarioRepository: UsuarioRepository,
-  ) {}
+  constructor(private readonly usuarioRepository: UsuarioRepository) {}
 
   async criaUsuario(dadosDoUsuario: CriaUsuarioDTO) {
     const usuarioEntity = new UsuarioEntity();

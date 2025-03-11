@@ -6,16 +6,18 @@ import {
   DeleteDateColumn,
   PrimaryGeneratedColumn,
   OneToMany,
+  ManyToOne,
 } from 'typeorm';
 import { ProdutoEntity } from 'src/produto/produto.entity';
+import { UsuarioEntity } from 'src/usuario/usuario.entity';
 
 @Entity({ name: 'fornecedores' })
 export class FornecedorEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ name: 'usuario_id', length: 100, nullable: false })
-  usuarioId: string;
+  @ManyToOne(() => UsuarioEntity, (usuario) => usuario.id, { nullable: false })
+  usuario: UsuarioEntity;
 
   @Column({ name: 'nome', length: 100, nullable: false })
   nome: string;
