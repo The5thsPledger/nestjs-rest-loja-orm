@@ -6,13 +6,14 @@ import { CriaProdutoDTO } from './dto/CriaProduto.dto';
 import { randomUUID } from 'crypto';
 import { UsuarioService } from 'src/usuario/usuario.service';
 import { ListaUsuarioDTO } from 'src/usuario/dto/ListaUsuario.dto';
+import { ListaProdutoDTO } from './dto/ListaProduto.dto';
 
 @Injectable()
 export class ProdutoService {
   constructor(private produtoRepository: ProdutoRepository) {}
   private usuarioService: UsuarioService;
 
-  async criaProduto(dadosProduto: CriaProdutoDTO) {
+  async criarProduto(dadosProduto: CriaProdutoDTO) {
     const produto = new ProdutoEntity();
     produto.id              = randomUUID(),
     produto.nome            = dadosProduto.nome,
@@ -26,19 +27,15 @@ export class ProdutoService {
     await this.produtoRepository.salvar(produto);
   }
 
-  async listProdutos(categoria? : string) {
-    let whereClause: any = {};
-    if (categoria) {
-      whereClause = categoria;
+  async listarProdutos(produto? : ListaProdutoDTO) {
+    let produtoEntity: ProdutoEntity = null;
+    if (produto) {
+      produtoEntity = new ProdutoEntity();
+      produtoEntity.id        = produto.id;
+      produtoEntity.categoria = produto.categoria;
     }
 
-    return await this.produtoRepository.listar({
-      relations: {
-        imagens: true,
-        caracteristicas: true,
-      },
-      where : whereClause
-    });
+    return await this.produtoRepository.listar(produtoEntity);
   }
 
   async atualizaProduto(id: string, novosDados: AtualizaProdutoDTO) {

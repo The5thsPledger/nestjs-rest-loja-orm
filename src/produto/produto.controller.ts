@@ -7,28 +7,31 @@ import {
   Post,
   Put,
   Query,
+  UseInterceptors,
+  ValidationPipe,
 } from '@nestjs/common';
-import { randomUUID } from 'crypto';
-
 import { AtualizaProdutoDTO } from './dto/atualizaProduto.dto';
 import { CriaProdutoDTO } from './dto/CriaProduto.dto';
-import { ProdutoEntity } from './produto.entity';
 import { ProdutoService } from './produto.service';
+import { ListaProdutoDTO } from './dto/ListaProduto.dto';
+import { CacheInterceptor } from '@nestjs/cache-manager';
 
 @Controller('produtos')
 export class ProdutoController {
   constructor(private readonly produtoService: ProdutoService) {}
 
   @Post()
-  async criaNovo(@Body() dadosProduto: CriaProdutoDTO) {
-    return await this.produtoService.criaProduto(dadosProduto);
+  async criarNovo(@Body() dadosProduto: CriaProdutoDTO) {
+    return await this.produtoService.criarProduto(dadosProduto);
   }
 
   @Get()
+  @UseInterceptors(CacheInterceptor)
   async listarTodos(
-    @Query() categoria? : string
+    @Query(new ValidationPipe({ transform : true })) produto?: ListaProdutoDTO
   ) {
-    return this.produtoService.listProdutos(categoria);
+    produto = produto.categoria || produto.id ? produto : null;
+    return this.produtoService.listarProdutos(produto);
   }
 
   @Put('/:id')

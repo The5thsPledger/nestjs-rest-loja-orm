@@ -19,7 +19,8 @@ export class CustomExceptionFilter implements ExceptionFilter {
             if (exception instanceof HttpException) {
                 exceptionResponse = exception.getResponse()
                 detalhe = Array.isArray(exceptionResponse?.message) ? 
-                    exceptionResponse.message.join(", ") : exceptionResponse.message
+                    exceptionResponse.message.join(", ") : exceptionResponse.message;
+                detalhe = detalhe == exception.message ? null : detalhe
             }
             const status    = exception.getStatus();
             response

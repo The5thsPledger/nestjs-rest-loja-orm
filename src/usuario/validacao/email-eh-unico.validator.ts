@@ -18,7 +18,7 @@ export class EmailEhUnicoValidator implements ValidatorConstraintInterface {
     _validationArguments?: ValidationArguments,
   ): Promise<boolean> {
     try {
-      const usuarioComEmailExiste = await this.usuarioService.listUsuarios(value);
+      const usuarioComEmailExiste = await this.usuarioService.listarUsuarios(value);
       if (usuarioComEmailExiste) {
         throw new ConflictException('Email ' + value + ' já está em uso.');
       }

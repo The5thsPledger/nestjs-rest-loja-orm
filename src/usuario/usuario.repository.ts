@@ -19,11 +19,11 @@ export class UsuarioRepository {
         let usuario = new Array<UsuarioEntity>();
         const msg   = new Array<string>();
         if (usuarioEntity) {
-            if (usuarioEntity.email) {
-                msg.push(' com o email ' + usuarioEntity.email);
-            }
             if (usuarioEntity.id) {
                 msg.push(' com o id ' + usuarioEntity.id);
+            }
+            if (usuarioEntity.email) {
+                msg.push(' com o email ' + usuarioEntity.email);
             }
 
             usuario.push(await this.usuarioRepository.findOne({ 

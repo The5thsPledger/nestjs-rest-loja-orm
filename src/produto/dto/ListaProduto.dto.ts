@@ -28,18 +28,4 @@ export class ListaProdutoDTO {
 
   @IsOptional()
   imagens: ListaImagemProdutoDTO[]
-
-  constructor(
-    id              : string,
-    nome            : string,
-    caracteristicas : ListaCaracteristicaProdutoDTO[],
-    imagens         : ListaImagemProdutoDTO[],
-    categoria       : string
-  ) {
-    id              = this.id
-    nome            = this.nome
-    caracteristicas = this.caracteristicas
-    imagens         = this.imagens
-    categoria       = this.categoria
-  }
 }

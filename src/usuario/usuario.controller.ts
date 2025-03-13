@@ -24,16 +24,16 @@ export class UsuarioController {
   }
 
   @Get()
-  async listaUsuarios(
+  async listarUsuarios(
     @Body('email')  email : string = null
   ) {
-    const usuariosSalvos = await this.usuarioService.listUsuarios(new ListaUsuarioDTO(null, null, email));
+    const usuariosSalvos = await this.usuarioService.listarUsuarios(new ListaUsuarioDTO(null, null, email));
 
     return usuariosSalvos;
   }
 
   @Put('/:id')
-  async atualizaUsuario(
+  async atualizarUsuario(
     @Param('id') id: string,
     @Body() novosDados: AtualizaUsuarioDTO,
   ) {
@@ -49,7 +49,7 @@ export class UsuarioController {
   }
 
   @Delete('/:id')
-  async removeUsuario(@Param('id') id: string) {
+  async removerUsuario(@Param('id') id: string) {
     const usuarioRemovido = await this.usuarioService.deletaUsuario(id);
 
     return {

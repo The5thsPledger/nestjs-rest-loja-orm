@@ -55,7 +55,7 @@ export class UsuarioService {
     }
   }
 
-  async listUsuarios(usuario? : ListaUsuarioDTO) {
+  async listarUsuarios(usuario? : ListaUsuarioDTO) {
     try {
       return (await this.getUsuario(usuario)).map(
         (usuario) => new ListaUsuarioDTO(
@@ -70,7 +70,7 @@ export class UsuarioService {
 
   async atualizaUsuario(id: string, novosDados: AtualizaUsuarioDTO) {
     try {
-      await this.listUsuarios(new ListaUsuarioDTO(id));
+      await this.listarUsuarios(new ListaUsuarioDTO(id));
     }
     catch (exception) {
       if (exception instanceof NotFoundException) {
@@ -88,7 +88,7 @@ export class UsuarioService {
 
   async deletaUsuario(id: string) {
     try {
-      await this.listUsuarios(new ListaUsuarioDTO(id));
+      await this.listarUsuarios(new ListaUsuarioDTO(id));
     }
     catch (exception) {
       if (exception instanceof NotFoundException) {

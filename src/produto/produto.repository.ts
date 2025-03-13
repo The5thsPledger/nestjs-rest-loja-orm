@@ -14,8 +14,46 @@ export class ProdutoRepository {
     await this.produtoRepository.save(produtoEntity);
   }
 
-  async listar(options?: FindManyOptions<ProdutoEntity>) {
-    return await this.produtoRepository.find(options);
+  async listar(produtoEntity?: ProdutoEntity) {
+    let produto = new Array<ProdutoEntity>();
+    const msg   = new Array<string>();
+    let categoria: string = null;
+    if (produtoEntity) {
+      if (produtoEntity.id) {
+        produto.push(await this.produtoRepository.findOne({
+          relations: {
+            imagens: true,
+            caracteristicas: true,
+          },
+          where : { id: produtoEntity.id}
+        }))
+
+        if (produto[0]) {
+          return produto
+        }
+        else {
+          throw new NotFoundException("Não encontrado nenhum produto com o id " + produtoEntity.id);
+        }
+      }
+      else if (produtoEntity.categoria) {
+        categoria = produtoEntity.categoria;
+        msg.push(" com a categoria " + categoria)
+      }
+    }
+    produto = await this.produtoRepository.find({
+        relations: {
+          imagens         : true,
+          caracteristicas : true
+        },
+        where: { categoria: categoria}
+      })
+
+    if (produto[0]) {
+      return produto
+    }
+    else {
+      throw new NotFoundException("Não encontrado nenhum produto" + msg + ".");
+    }
   }
 
   private buscaPorId(id: string) {
