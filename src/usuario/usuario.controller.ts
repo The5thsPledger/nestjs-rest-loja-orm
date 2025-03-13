@@ -7,12 +7,14 @@ import {
   Patch,
   Post,
   Put,
+  UseInterceptors,
 } from '@nestjs/common';
 import { AtualizaUsuarioDTO } from './dto/AtualizaUsuario.dto';
 import { CriaUsuarioDTO } from './dto/CriaUsuario.dto';
 import { UsuarioService } from './usuario.service';
 import { PermissaoUsuarioDTO } from 'src/perfil/dto/PermissaoUsuario.dto';
 import { ListaUsuarioDTO } from './dto/ListaUsuario.dto';
+import { CacheInterceptor } from '@nestjs/cache-manager';
 
 @Controller('/usuarios')
 export class UsuarioController {
@@ -23,7 +25,8 @@ export class UsuarioController {
     return await this.usuarioService.criaUsuario(dadosDoUsuario);
   }
 
-  @Get()
+  @Get()  
+  @UseInterceptors(CacheInterceptor)
   async listarUsuarios(
     @Body('email')  email : string = null
   ) {
