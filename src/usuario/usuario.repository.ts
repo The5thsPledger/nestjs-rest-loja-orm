@@ -1,8 +1,8 @@
-import { Injectable, NotFoundException, PreconditionFailedException } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { UsuarioEntity } from "./usuario.entity";
-import { QueryFailedError, Repository } from "typeorm";
-import { AtualizaUsuarioDTO } from "./dto/AtualizaUsuario.dto";
+import { Repository } from "typeorm";
+import { PerfilEntity } from "src/perfil/perfil.entity";
 
 @Injectable()
 export class UsuarioRepository {
@@ -15,21 +15,23 @@ export class UsuarioRepository {
         await this.usuarioRepository.save(usuarioEntity);
     }
     
-    async listar(email: string = null, id: string = null) {
+    async listar(usuarioEntity?: UsuarioEntity) {
         let usuario = new Array<UsuarioEntity>();
         const msg   = new Array<string>();
-        if (email || id) {
-            if (email) {
-                msg.push(' com o email ' + email);
+        if (usuarioEntity) {
+            if (usuarioEntity.email) {
+                msg.push(' com o email ' + usuarioEntity.email);
             }
-            if (id) {
-                msg.push(' com o id ' + id);
+            if (usuarioEntity.id) {
+                msg.push(' com o id ' + usuarioEntity.id);
             }
 
-            usuario.push(await this.usuarioRepository.findOne({ where: {
-                email : email,
-                id    : id
-            }}));
+            usuario.push(await this.usuarioRepository.findOne({ 
+                where: {
+                    email : usuarioEntity.email,
+                    id    : usuarioEntity.id
+                },
+            }));
         }
         else {
             usuario = await this.usuarioRepository.find();
@@ -43,11 +45,21 @@ export class UsuarioRepository {
         }
     }
     
-    async atualizar(id: string, novosDados: AtualizaUsuarioDTO) {
-        await this.usuarioRepository.update(id, novosDados);
+    async atualizar(novosDados: UsuarioEntity) {
+        await this.usuarioRepository.update(novosDados.id, novosDados);
     }
 
     async deletar(id: string) {
         await this.usuarioRepository.delete(id);
+    }
+    
+    async revogarPermissao(usuario: UsuarioEntity, perfil: PerfilEntity) {
+        usuario.perfis = usuario.perfis.filter((perfilUsuario) => perfilUsuario.id != perfil.id);
+        this.usuarioRepository.save(usuario);
+    }
+
+    async concederPermissao(usuario: UsuarioEntity, perfil: PerfilEntity) {
+        usuario.perfis.push(perfil)
+        this.usuarioRepository.save(usuario)
     }
 }

@@ -22,9 +22,6 @@ export class EmailEhUnicoValidator implements ValidatorConstraintInterface {
       if (usuarioComEmailExiste) {
         throw new ConflictException('Email ' + value + ' já está em uso.');
       }
-      else {
-        return !usuarioComEmailExiste;
-      }
     }
     catch (exception) {
       if (exception instanceof NotFoundException) {

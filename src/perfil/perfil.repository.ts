@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { PerfilEntity } from "./perfil.entity";
 import { Repository } from "typeorm";
@@ -10,16 +10,33 @@ export class PerfilRepository {
         private readonly perfilRepository: Repository<PerfilEntity>
     ) {}
 
-    async listar(value: string = null) {
-        let where: { nome?: string; };
-        if (value) {
-            where = { nome : value }
+    async listar(perfil?: PerfilEntity) {
+        let perfis  = new Array<PerfilEntity>();
+        const msg   = new Array<string>();
+
+        if (perfil) {
+            if (perfil.nome) {
+                msg.push(" com o nome " + perfil.nome);
+            }
+            if (perfil.id) {
+                msg.push(" com o ID " + perfil.id);
+            }
+            
+            perfis.push(await this.perfilRepository.findOne({ where: {
+                nome: perfil.nome,
+                id  : perfil.id
+            }}))
         }
         else {
-            where = {}
+            perfis = await this.perfilRepository.find();
         }
 
-        return await this.perfilRepository.find({where: where})
+        if (perfis[0]) {
+            return perfis
+        }
+        else {
+            throw new NotFoundException("Não encontrado nenhum perfil" + msg + ".");
+        }
     }
     
     async criaPerfil(novoPerfil: PerfilEntity) {

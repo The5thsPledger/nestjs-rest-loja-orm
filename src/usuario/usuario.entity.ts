@@ -1,4 +1,5 @@
 import { PerfilEntity } from 'src/perfil/perfil.entity';
+import { ProdutoEntity } from 'src/produto/produto.entity';
 import {
   Entity,
   Column,
@@ -7,6 +8,7 @@ import {
   DeleteDateColumn,
   PrimaryGeneratedColumn,
   ManyToMany,
+  OneToMany,
 } from 'typeorm';
 
 @Entity({ name: 'usuarios' })
@@ -32,6 +34,10 @@ export class UsuarioEntity {
   @DeleteDateColumn({ name: 'deleted_at' })
   deletedAt: string;
 
-  @ManyToMany(() => PerfilEntity)
-  perfis: PerfilEntity[]
+  @ManyToMany(() => PerfilEntity, (perfil) => perfil.usuarios, { eager: true})
+  perfis: PerfilEntity[];
+
+  
+  @OneToMany(() => ProdutoEntity, (produto) => produto.usuario, { nullable: true })
+  produto: ProdutoEntity[];
 }

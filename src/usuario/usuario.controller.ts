@@ -4,12 +4,15 @@ import {
   Delete,
   Get,
   Param,
+  Patch,
   Post,
   Put,
 } from '@nestjs/common';
 import { AtualizaUsuarioDTO } from './dto/AtualizaUsuario.dto';
 import { CriaUsuarioDTO } from './dto/CriaUsuario.dto';
 import { UsuarioService } from './usuario.service';
+import { PermissaoUsuarioDTO } from 'src/perfil/dto/PermissaoUsuario.dto';
+import { ListaUsuarioDTO } from './dto/ListaUsuario.dto';
 
 @Controller('/usuarios')
 export class UsuarioController {
@@ -21,10 +24,10 @@ export class UsuarioController {
   }
 
   @Get()
-  async listUsuarios(
+  async listaUsuarios(
     @Body('email')  email : string = null
   ) {
-    const usuariosSalvos = await this.usuarioService.listUsuarios(email);
+    const usuariosSalvos = await this.usuarioService.listUsuarios(new ListaUsuarioDTO(null, null, email));
 
     return usuariosSalvos;
   }
@@ -53,5 +56,10 @@ export class UsuarioController {
       usuario: usuarioRemovido,
       messagem: 'usuário removido com suceso',
     };
+  }
+
+  @Patch()
+  async permissaoUsuario(@Body() permissaoUsuario: PermissaoUsuarioDTO) {
+    return await this.usuarioService.permissaoUsuario(permissaoUsuario)
   }
 }

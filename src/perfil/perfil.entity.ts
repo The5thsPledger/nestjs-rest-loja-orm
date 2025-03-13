@@ -1,7 +1,9 @@
 import { UsuarioEntity } from "src/usuario/usuario.entity";
 import { 
     Column, CreateDateColumn, DeleteDateColumn, UpdateDateColumn,
-    Entity, JoinTable, PrimaryGeneratedColumn
+    Entity, PrimaryGeneratedColumn,
+    ManyToMany,
+    JoinTable
 } from "typeorm";
 
 @Entity({name : "perfis"})
@@ -21,6 +23,7 @@ export class PerfilEntity {
     @DeleteDateColumn({ name: 'deleted_at' })
     deletedAt: string;
 
+    @ManyToMany(() => UsuarioEntity, (usuario) => usuario.perfis)
     @JoinTable()
-    usuarios: UsuarioEntity
+    usuarios: UsuarioEntity[]
 }

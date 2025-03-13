@@ -5,6 +5,7 @@ import { ProdutoRepository } from './produto.repository';
 import { CriaProdutoDTO } from './dto/CriaProduto.dto';
 import { randomUUID } from 'crypto';
 import { UsuarioService } from 'src/usuario/usuario.service';
+import { ListaUsuarioDTO } from 'src/usuario/dto/ListaUsuario.dto';
 
 @Injectable()
 export class ProdutoService {
@@ -12,19 +13,17 @@ export class ProdutoService {
   private usuarioService: UsuarioService;
 
   async criaProduto(dadosProduto: CriaProdutoDTO) {
-    await this.produtoRepository.salvar(
-      {
-        id: randomUUID(),
-        nome: dadosProduto.nome,
-        usuario: await this.usuarioService.listUsuarios(null, dadosProduto.usuarioId),
-        valor: dadosProduto.valor,
-        quantidade: dadosProduto.quantidade,
-        descricao: dadosProduto.descricao,
-        categoria: dadosProduto.categoria,
-        caracteristicas: dadosProduto.caracteristicas,
-        imagens: dadosProduto.imagens,
-      } as unknown as ProdutoEntity
-    );
+    const produto = new ProdutoEntity();
+    produto.id              = randomUUID(),
+    produto.nome            = dadosProduto.nome,
+    produto.usuario         = (await this.usuarioService.getUsuario(new ListaUsuarioDTO(dadosProduto.usuarioId)))[0],
+    produto.valor           = dadosProduto.valor,
+    produto.quantidade      = dadosProduto.quantidade,
+    produto.descricao       = dadosProduto.descricao,
+    produto.categoria       = dadosProduto.categoria,
+    produto.caracteristicas = dadosProduto.caracteristicas,
+    produto.imagens         = dadosProduto.imagens,
+    await this.produtoRepository.salvar(produto);
   }
 
   async listProdutos(categoria? : string) {

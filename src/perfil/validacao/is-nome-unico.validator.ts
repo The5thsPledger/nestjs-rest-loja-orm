@@ -1,21 +1,29 @@
-import { ConflictException, Injectable } from "@nestjs/common";
+import { ConflictException, Injectable, NotFoundException } from "@nestjs/common";
 import { registerDecorator, ValidationArguments, ValidationOptions, ValidatorConstraint, ValidatorConstraintInterface } from "class-validator";
 import { PerfilService } from "../perfil.service";
+import { ListaPerfilDTO } from "../dto/ListaPerfil.dto";
 
 @Injectable()
 @ValidatorConstraint({ async: true })
 export class IsNomeUnicoValidator implements ValidatorConstraintInterface {
     constructor(private perfilService: PerfilService) {}
 
-    async validate(value: string, validationArguments?: ValidationArguments): Promise<boolean> {
-        if (await this.perfilService.listaPerfis(value)) {
-            throw new ConflictException('Perfil ' + value + ' já está em uso.');
+    async validate(nome: string): Promise<boolean> {
+        try {
+            if (await this.perfilService.listaPerfis(new ListaPerfilDTO(nome))) {
+                throw new ConflictException('Perfil ' + nome + ' já está em uso.');
+            }
         }
-        else {
-            return true
-        };
+        catch (exception) {
+            if (exception instanceof NotFoundException) {
+                return true;
+            }
+            else {
+                throw exception;
+            }
+        }
     }
-}
+} 
 
 export const IsNomeUnico = (opcoesDeValidacao: ValidationOptions) => {
     return (obj: Object, propriedade: string) => {

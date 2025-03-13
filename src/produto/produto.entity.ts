@@ -18,7 +18,7 @@ export class ProdutoEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @ManyToOne(() =>UsuarioEntity, (usuario) => usuario.id, { nullable: false })
+  @ManyToOne(() =>UsuarioEntity, (usuario) => usuario.produto, { nullable: false })
   usuario: UsuarioEntity;
 
   @Column({ name: 'nome', length: 100, nullable: false })

@@ -1,6 +1,6 @@
 import { ArgumentsHost, Catch, ExceptionFilter, GatewayTimeoutException, HttpException, RequestTimeoutException } from "@nestjs/common";
 import { Request, Response } from 'express';
-import { QueryFailedError } from "typeorm";
+import { Any, QueryFailedError } from "typeorm";
 
 @Catch()
 export class CustomExceptionFilter implements ExceptionFilter {
@@ -14,12 +14,20 @@ export class CustomExceptionFilter implements ExceptionFilter {
             exception instanceof GatewayTimeoutException    || 
             exception instanceof RequestTimeoutException
         ) {
+            let exceptionResponse: any
+            let detalhe
+            if (exception instanceof HttpException) {
+                exceptionResponse = exception.getResponse()
+                detalhe = Array.isArray(exceptionResponse?.message) ? 
+                    exceptionResponse.message.join(", ") : exceptionResponse.message
+            }
             const status    = exception.getStatus();
             response
                 .status(status)
                 .json({
                     status      : status,
                     mensagem    : exception.message,
+                    detalhe     : detalhe,
                     timeStamp   : new Date(),
                     path        : request.url,
                     method      : request.method,
