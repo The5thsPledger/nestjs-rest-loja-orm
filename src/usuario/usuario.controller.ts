@@ -1,5 +1,6 @@
 import {
   Body,
+  CacheTTL,
   Controller,
   Delete,
   Get,
@@ -27,6 +28,7 @@ export class UsuarioController {
 
   @Get()  
   @UseInterceptors(CacheInterceptor)
+  @CacheTTL(60 * 1000 * 15)
   async listarUsuarios(
     @Body('email')  email : string = null
   ) {

@@ -33,6 +33,9 @@ services:
         - 6379:6379
       volumes:
         - redis:/data
+      networks:
+        - postgres
+
 networks:
   postgres:
     driver: bridge
