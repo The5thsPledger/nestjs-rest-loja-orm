@@ -16,48 +16,49 @@ export class ProdutoRepository {
 
   async listar(produtoEntity?: ProdutoEntity) {
     let produto = new Array<ProdutoEntity>();
-    const msg   = new Array<string>();
+    const msg = new Array<string>();
     let categoria: string = null;
     if (produtoEntity) {
       if (produtoEntity.id) {
-        produto.push(await this.produtoRepository.findOne({
-          relations: {
-            imagens: true,
-            caracteristicas: true,
-          },
-          where : { id: produtoEntity.id}
-        }))
+        produto.push(
+          await this.produtoRepository.findOne({
+            relations: {
+              imagens: true,
+              caracteristicas: true,
+            },
+            where: { id: produtoEntity.id },
+          }),
+        );
 
         if (produto[0]) {
-          return produto
+          return produto;
+        } else {
+          throw new NotFoundException(
+            'Não encontrado nenhum produto com o id ' + produtoEntity.id,
+          );
         }
-        else {
-          throw new NotFoundException("Não encontrado nenhum produto com o id " + produtoEntity.id);
-        }
-      }
-      else if (produtoEntity.categoria) {
+      } else if (produtoEntity.categoria) {
         categoria = produtoEntity.categoria;
-        msg.push(" com a categoria " + categoria)
+        msg.push(' com a categoria ' + categoria);
       }
     }
     produto = await this.produtoRepository.find({
-        relations: {
-          imagens         : true,
-          caracteristicas : true
-        },
-        where: { categoria: categoria}
-      })
+      relations: {
+        imagens: true,
+        caracteristicas: true,
+      },
+      where: { categoria: categoria },
+    });
 
     if (produto[0]) {
-      return produto
-    }
-    else {
-      throw new NotFoundException("Não encontrado nenhum produto" + msg + ".");
+      return produto;
+    } else {
+      throw new NotFoundException('Não encontrado nenhum produto' + msg + '.');
     }
   }
 
   private buscaPorId(id: string) {
-    const possivelProduto = this.produtoRepository.findOneBy({id});
+    const possivelProduto = this.produtoRepository.findOneBy({ id });
 
     if (!possivelProduto) {
       throw new NotFoundException('Produto não existe');

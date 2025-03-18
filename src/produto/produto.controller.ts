@@ -15,7 +15,6 @@ import { CriaProdutoDTO } from './dto/CriaProduto.dto';
 import { ProdutoService } from './produto.service';
 import { ListaProdutoDTO } from './dto/ListaProduto.dto';
 import { CacheInterceptor } from '@nestjs/cache-manager';
-
 @Controller('produtos')
 export class ProdutoController {
   constructor(private readonly produtoService: ProdutoService) {}
@@ -28,7 +27,7 @@ export class ProdutoController {
   @Get()
   @UseInterceptors(CacheInterceptor)
   async listarTodos(
-    @Query(new ValidationPipe({ transform : true })) produto?: ListaProdutoDTO
+    @Query(new ValidationPipe({ transform: true })) produto?: ListaProdutoDTO,
   ) {
     produto = produto.categoria || produto.id ? produto : null;
     return this.produtoService.listarProdutos(produto);

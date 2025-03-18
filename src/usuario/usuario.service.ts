@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { ListaUsuarioDTO } from './dto/ListaUsuario.dto';
 import { UsuarioEntity } from './usuario.entity';
 import { AtualizaUsuarioDTO } from './dto/AtualizaUsuario.dto';
@@ -13,21 +17,20 @@ import { ListaPerfilDTO } from 'src/perfil/dto/ListaPerfil.dto';
 @Injectable()
 export class UsuarioService {
   constructor(
-    private readonly usuarioRepository: UsuarioRepository, 
-    private readonly perfilService: PerfilService
+    private readonly usuarioRepository: UsuarioRepository,
+    private readonly perfilService: PerfilService,
   ) {}
 
   async getUsuario(usuario?: ListaUsuarioDTO) {
     let usuarioEntity: UsuarioEntity = null;
     if (usuario) {
-      usuarioEntity = new UsuarioEntity()
+      usuarioEntity = new UsuarioEntity();
       usuarioEntity.email = usuario.email;
-      usuarioEntity.id    = usuario.id;
+      usuarioEntity.id = usuario.id;
     }
     try {
       return await this.usuarioRepository.listar(usuarioEntity);
-    }
-    catch (exception) {
+    } catch (exception) {
       throw exception;
     }
   }
@@ -41,29 +44,31 @@ export class UsuarioService {
 
     try {
       await this.usuarioRepository.salvar(usuarioEntity);
-      
+
       return {
         usuario: new ListaUsuarioDTO(usuarioEntity.id, usuarioEntity.nome),
         messagem: 'usuário criado com sucesso',
       };
-    }
-    catch(exception) {
-      return { 
-        mensagem  : 'Erro inesperado ao salvar novo usuário.',
-        erro      : exception.message
-      }
+    } catch (exception) {
+      return {
+        mensagem: 'Erro inesperado ao salvar novo usuário.',
+        erro: exception.message,
+      };
     }
   }
 
-  async listarUsuarios(usuario? : ListaUsuarioDTO) {
+  async listarUsuarios(usuario?: ListaUsuarioDTO) {
     try {
       return (await this.getUsuario(usuario)).map(
-        (usuario) => new ListaUsuarioDTO(
-          usuario.id, usuario.nome, usuario.email, usuario.perfis
-        )
+        (usuario) =>
+          new ListaUsuarioDTO(
+            usuario.id,
+            usuario.nome,
+            usuario.email,
+            usuario.perfis,
+          ),
       );
-    }
-    catch (exception) {
+    } catch (exception) {
       throw exception;
     }
   }
@@ -71,8 +76,7 @@ export class UsuarioService {
   async atualizaUsuario(id: string, novosDados: AtualizaUsuarioDTO) {
     try {
       await this.listarUsuarios(new ListaUsuarioDTO(id));
-    }
-    catch (exception) {
+    } catch (exception) {
       if (exception instanceof NotFoundException) {
         throw new BadRequestException(exception.message);
       }
@@ -89,8 +93,7 @@ export class UsuarioService {
   async deletaUsuario(id: string) {
     try {
       await this.listarUsuarios(new ListaUsuarioDTO(id));
-    }
-    catch (exception) {
+    } catch (exception) {
       if (exception instanceof NotFoundException) {
         throw new BadRequestException(exception.message);
       }
@@ -100,34 +103,33 @@ export class UsuarioService {
 
   async permissaoUsuario(permissaoUsuario: PermissaoUsuarioDTO) {
     const perfis = await this.perfilService.listaPerfis(
-      new ListaPerfilDTO(null, permissaoUsuario.perfilID)
-    )
-    const usuario: UsuarioEntity  = (await this.getUsuario(new ListaUsuarioDTO(permissaoUsuario.usuarioID)))[0];
+      new ListaPerfilDTO(null, permissaoUsuario.perfilID),
+    );
+    const usuario: UsuarioEntity = (
+      await this.getUsuario(new ListaUsuarioDTO(permissaoUsuario.usuarioID))
+    )[0];
 
     if (usuario.perfis.length > 0) {
       const perfil = usuario.perfis.find(
-        (perfil) => perfil.id == permissaoUsuario.perfilID
+        (perfil) => perfil.id == permissaoUsuario.perfilID,
       );
 
-      this.usuarioRepository.revogarPermissao(usuario, perfil)
+      this.usuarioRepository.revogarPermissao(usuario, perfil);
       return {
-        mensagem: 
-          "Perfil " + perfil.nome + " revogado do usuário " + usuario.nome
-      }
-    }
-    else {
+        mensagem:
+          'Perfil ' + perfil.nome + ' revogado do usuário ' + usuario.nome,
+      };
+    } else {
       const perfil = new PerfilEntity();
-      perfil.id   = perfis[0].id;
+      perfil.id = perfis[0].id;
       perfil.nome = perfis[0].nome;
 
-      this.usuarioRepository.concederPermissao(
-        usuario, perfil
-      )
+      this.usuarioRepository.concederPermissao(usuario, perfil);
 
       return {
-        mensagem: 
-          "Perfil " + perfil.nome + " concedido ao usuário " + usuario.nome
-      }
+        mensagem:
+          'Perfil ' + perfil.nome + ' concedido ao usuário ' + usuario.nome,
+      };
     }
   }
 }

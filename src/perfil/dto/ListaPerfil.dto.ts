@@ -1,3 +1,3 @@
 export class ListaPerfilDTO {
-    constructor(readonly nome?: string, readonly id?: string) {}
+  constructor(readonly nome?: string, readonly id?: string) {}
 }

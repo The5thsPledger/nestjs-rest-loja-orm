@@ -15,23 +15,27 @@ export class ProdutoService {
 
   async criarProduto(dadosProduto: CriaProdutoDTO) {
     const produto = new ProdutoEntity();
-    produto.id              = randomUUID(),
-    produto.nome            = dadosProduto.nome,
-    produto.usuario         = (await this.usuarioService.getUsuario(new ListaUsuarioDTO(dadosProduto.usuarioId)))[0],
-    produto.valor           = dadosProduto.valor,
-    produto.quantidade      = dadosProduto.quantidade,
-    produto.descricao       = dadosProduto.descricao,
-    produto.categoria       = dadosProduto.categoria,
-    produto.caracteristicas = dadosProduto.caracteristicas,
-    produto.imagens         = dadosProduto.imagens,
-    await this.produtoRepository.salvar(produto);
+    (produto.id = randomUUID()),
+      (produto.nome = dadosProduto.nome),
+      (produto.usuario = (
+        await this.usuarioService.getUsuario(
+          new ListaUsuarioDTO(dadosProduto.usuarioId),
+        )
+      )[0]),
+      (produto.valor = dadosProduto.valor),
+      (produto.quantidade = dadosProduto.quantidade),
+      (produto.descricao = dadosProduto.descricao),
+      (produto.categoria = dadosProduto.categoria),
+      (produto.caracteristicas = dadosProduto.caracteristicas),
+      (produto.imagens = dadosProduto.imagens),
+      await this.produtoRepository.salvar(produto);
   }
 
-  async listarProdutos(produto? : ListaProdutoDTO) {
+  async listarProdutos(produto?: ListaProdutoDTO) {
     let produtoEntity: ProdutoEntity = null;
     if (produto) {
       produtoEntity = new ProdutoEntity();
-      produtoEntity.id        = produto.id;
+      produtoEntity.id = produto.id;
       produtoEntity.categoria = produto.categoria;
     }
 

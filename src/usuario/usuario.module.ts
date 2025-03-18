@@ -13,8 +13,11 @@ import { PerfilEntity } from 'src/perfil/perfil.entity';
   imports: [TypeOrmModule.forFeature([UsuarioEntity, PerfilEntity])],
   controllers: [UsuarioController],
   providers: [
-    UsuarioService, UsuarioRepository, EmailEhUnicoValidator,
-    PerfilService,  PerfilRepository
+    UsuarioService,
+    UsuarioRepository,
+    EmailEhUnicoValidator,
+    PerfilService,
+    PerfilRepository,
   ],
 })
 export class UsuarioModule {}

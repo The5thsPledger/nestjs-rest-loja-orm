@@ -34,10 +34,11 @@ export class UsuarioEntity {
   @DeleteDateColumn({ name: 'deleted_at' })
   deletedAt: string;
 
-  @ManyToMany(() => PerfilEntity, (perfil) => perfil.usuarios, { eager: true})
+  @ManyToMany(() => PerfilEntity, (perfil) => perfil.usuarios, { eager: true })
   perfis: PerfilEntity[];
 
-  
-  @OneToMany(() => ProdutoEntity, (produto) => produto.usuario, { nullable: true })
+  @OneToMany(() => ProdutoEntity, (produto) => produto.usuario, {
+    nullable: true,
+  })
   produto: ProdutoEntity[];
 }

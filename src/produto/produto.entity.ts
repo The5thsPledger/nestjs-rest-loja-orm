@@ -18,7 +18,9 @@ export class ProdutoEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @ManyToOne(() =>UsuarioEntity, (usuario) => usuario.produto, { nullable: false })
+  @ManyToOne(() => UsuarioEntity, (usuario) => usuario.produto, {
+    nullable: false,
+  })
   usuario: UsuarioEntity;
 
   @Column({ name: 'nome', length: 100, nullable: false })
@@ -59,12 +61,10 @@ export class ProdutoEntity {
   )
   caracteristicas: ProdutoCaracteristicaEntity[];
 
-  @ManyToOne(
-    () => FornecedorEntity, (fornecedor) => fornecedor.produtos, {
-      orphanedRowAction: 'delete',
-      onDelete: 'CASCADE',
-      onUpdate: 'CASCADE'
-    }
-  )
+  @ManyToOne(() => FornecedorEntity, (fornecedor) => fornecedor.produtos, {
+    orphanedRowAction: 'delete',
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+  })
   fornecedor: FornecedorEntity;
 }

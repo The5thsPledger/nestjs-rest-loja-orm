@@ -1,4 +1,4 @@
-import { IsOptional, IsString } from "class-validator";
+import { IsOptional, IsString } from 'class-validator';
 
 class ListaCaracteristicaProdutoDTO {
   nome: string;
@@ -13,19 +13,19 @@ class ListaImagemProdutoDTO {
 export class ListaProdutoDTO {
   @IsOptional()
   @IsString()
-  categoria?: string
-  
-  @IsOptional()
-  @IsString()
-  id?: string
-  
-  @IsOptional()
-  @IsString()
-  nome?: string
+  categoria?: string;
 
   @IsOptional()
-  caracteristicas?: ListaCaracteristicaProdutoDTO[]
+  @IsString()
+  id?: string;
 
   @IsOptional()
-  imagens: ListaImagemProdutoDTO[]
+  @IsString()
+  nome?: string;
+
+  @IsOptional()
+  caracteristicas?: ListaCaracteristicaProdutoDTO[];
+
+  @IsOptional()
+  imagens: ListaImagemProdutoDTO[];
 }

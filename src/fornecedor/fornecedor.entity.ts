@@ -34,10 +34,9 @@ export class FornecedorEntity {
   @DeleteDateColumn({ name: 'deleted_at' })
   deletedAt: string;
 
-  @OneToMany(
-    () => ProdutoEntity,
-    (produtoEntity) => produtoEntity.fornecedor,
-    { cascade: true, eager: true },
-  )
+  @OneToMany(() => ProdutoEntity, (produtoEntity) => produtoEntity.fornecedor, {
+    cascade: true,
+    eager: true,
+  })
   produtos: ProdutoEntity[];
 }

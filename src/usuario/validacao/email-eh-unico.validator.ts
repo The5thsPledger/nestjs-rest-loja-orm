@@ -1,7 +1,10 @@
-import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import {
   registerDecorator,
-  ValidationArguments,
   ValidationOptions,
   ValidatorConstraint,
   ValidatorConstraintInterface,
@@ -13,21 +16,18 @@ import { UsuarioService } from '../usuario.service';
 export class EmailEhUnicoValidator implements ValidatorConstraintInterface {
   constructor(private usuarioService: UsuarioService) {}
 
-  async validate(
-    value: any,
-    _validationArguments?: ValidationArguments,
-  ): Promise<boolean> {
+  async validate(value: any): Promise<boolean> {
     try {
-      const usuarioComEmailExiste = await this.usuarioService.listarUsuarios(value);
+      const usuarioComEmailExiste = await this.usuarioService.listarUsuarios(
+        value,
+      );
       if (usuarioComEmailExiste) {
         throw new ConflictException('Email ' + value + ' já está em uso.');
       }
-    }
-    catch (exception) {
+    } catch (exception) {
       if (exception instanceof NotFoundException) {
         return true;
-      }
-      else {
+      } else {
         throw exception;
       }
     }
@@ -35,7 +35,7 @@ export class EmailEhUnicoValidator implements ValidatorConstraintInterface {
 }
 
 export const EmailEhUnico = (opcoesDeValidacao: ValidationOptions) => {
-  return (objeto: Object, propriedade: string) => {
+  return (objeto: { constructor: any }, propriedade: string) => {
     registerDecorator({
       target: objeto.constructor,
       propertyName: propriedade,

@@ -26,13 +26,13 @@ export class UsuarioController {
     return await this.usuarioService.criaUsuario(dadosDoUsuario);
   }
 
-  @Get()  
+  @Get()
   @UseInterceptors(CacheInterceptor)
   @CacheTTL(60 * 1000 * 15)
-  async listarUsuarios(
-    @Body('email')  email : string = null
-  ) {
-    const usuariosSalvos = await this.usuarioService.listarUsuarios(new ListaUsuarioDTO(null, null, email));
+  async listarUsuarios(@Body('email') email: string = null) {
+    const usuariosSalvos = await this.usuarioService.listarUsuarios(
+      new ListaUsuarioDTO(null, null, email),
+    );
 
     return usuariosSalvos;
   }
@@ -65,6 +65,6 @@ export class UsuarioController {
 
   @Patch()
   async permissaoUsuario(@Body() permissaoUsuario: PermissaoUsuarioDTO) {
-    return await this.usuarioService.permissaoUsuario(permissaoUsuario)
+    return await this.usuarioService.permissaoUsuario(permissaoUsuario);
   }
 }
