@@ -4,7 +4,7 @@ import { AtualizaProdutoDTO } from './dto/AtualizaProduto.dto';
 import { ProdutoRepository } from './produto.repository';
 import { CriaProdutoDTO } from './dto/CriaProduto.dto';
 import { UsuarioService } from 'src/usuario/usuario.service';
-import { ListaUsuarioDTO } from 'src/usuario/dto/ListaUsuario.dto';
+import { ListarUsuarioDTO } from 'src/usuario/dto/ListarUsuario.dto';
 import { ListaProdutoDTO } from './dto/ListaProduto.dto';
 
 @Injectable()
@@ -18,7 +18,7 @@ export class ProdutoService {
     const produto = new ProdutoEntity(dadosProduto);
     produto.usuario = (
       await this.usuarioService.getUsuario(
-        new ListaUsuarioDTO(dadosProduto.usuarioId),
+        new ListarUsuarioDTO(dadosProduto.usuarioId),
       )
     )[0];
     return await this.produtoRepository.salvar(produto);

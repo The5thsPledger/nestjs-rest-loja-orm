@@ -20,7 +20,7 @@ export class ProdutoController {
   constructor(private readonly produtoService: ProdutoService) {}
 
   @Post()
-  async criarNovo(@Body() dadosProduto: CriaProdutoDTO) {
+  async criarProduto(@Body() dadosProduto: CriaProdutoDTO) {
     return await this.produtoService.criarProduto(dadosProduto);
   }
 

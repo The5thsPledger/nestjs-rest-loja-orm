@@ -3,12 +3,11 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { ListaUsuarioDTO } from './dto/ListaUsuario.dto';
+import { ListarUsuarioDTO } from './dto/ListarUsuario.dto';
 import { UsuarioEntity } from './usuario.entity';
 import { AtualizaUsuarioDTO } from './dto/AtualizaUsuario.dto';
 import { UsuarioRepository } from './usuario.repository';
 import { CriaUsuarioDTO } from './dto/CriaUsuario.dto';
-import { v4 as uuid } from 'uuid';
 import { PermissaoUsuarioDTO } from 'src/perfil/dto/PermissaoUsuario.dto';
 import { PerfilService } from 'src/perfil/perfil.service';
 import { PerfilEntity } from 'src/perfil/perfil.entity';
@@ -21,32 +20,24 @@ export class UsuarioService {
     private readonly perfilService: PerfilService,
   ) {}
 
-  async getUsuario(usuario?: ListaUsuarioDTO) {
-    let usuarioEntity: UsuarioEntity = null;
-    if (usuario) {
-      usuarioEntity = new UsuarioEntity();
-      usuarioEntity.email = usuario.email;
-      usuarioEntity.id = usuario.id;
-    }
+  async getUsuario(usuario: ListarUsuarioDTO = null) {
+    const usuarioEntity = new UsuarioEntity(usuario);
     try {
       return await this.usuarioRepository.listar(usuarioEntity);
-    } catch (exception) {
+    } 
+    catch (exception) {
       throw exception;
     }
   }
 
-  async criaUsuario(dadosDoUsuario: CriaUsuarioDTO) {
-    const usuarioEntity = new UsuarioEntity();
-    usuarioEntity.email = dadosDoUsuario.email;
-    usuarioEntity.senha = dadosDoUsuario.senha;
-    usuarioEntity.nome = dadosDoUsuario.nome;
-    usuarioEntity.id = uuid();
+  async criarUsuario(dadosDoUsuario: CriaUsuarioDTO) {
+    const usuarioEntity = new UsuarioEntity(dadosDoUsuario);
 
     try {
       await this.usuarioRepository.salvar(usuarioEntity);
 
       return {
-        usuario: new ListaUsuarioDTO(usuarioEntity.id, usuarioEntity.nome),
+        usuario: new ListarUsuarioDTO(usuarioEntity.id, usuarioEntity.nome),
         messagem: 'usuário criado com sucesso',
       };
     } catch (exception) {
@@ -57,11 +48,11 @@ export class UsuarioService {
     }
   }
 
-  async listarUsuarios(usuario?: ListaUsuarioDTO) {
+  async listarUsuarios(usuario?: ListarUsuarioDTO) {
     try {
       return (await this.getUsuario(usuario)).map(
         (usuario) =>
-          new ListaUsuarioDTO(
+          new ListarUsuarioDTO(
             usuario.id,
             usuario.nome,
             usuario.email,
@@ -75,7 +66,7 @@ export class UsuarioService {
 
   async atualizaUsuario(id: string, novosDados: AtualizaUsuarioDTO) {
     try {
-      await this.listarUsuarios(new ListaUsuarioDTO(id));
+      await this.listarUsuarios(new ListarUsuarioDTO(id));
     } catch (exception) {
       if (exception instanceof NotFoundException) {
         throw new BadRequestException(exception.message);
@@ -92,7 +83,7 @@ export class UsuarioService {
 
   async deletaUsuario(id: string) {
     try {
-      await this.listarUsuarios(new ListaUsuarioDTO(id));
+      await this.listarUsuarios(new ListarUsuarioDTO(id));
     } catch (exception) {
       if (exception instanceof NotFoundException) {
         throw new BadRequestException(exception.message);
@@ -106,7 +97,7 @@ export class UsuarioService {
       new ListaPerfilDTO(null, permissaoUsuario.perfilID),
     );
     const usuario: UsuarioEntity = (
-      await this.getUsuario(new ListaUsuarioDTO(permissaoUsuario.usuarioID))
+      await this.getUsuario(new ListarUsuarioDTO(permissaoUsuario.usuarioID))
     )[0];
 
     if (usuario.perfis.length > 0) {

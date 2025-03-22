@@ -10,6 +10,7 @@ import {
   ValidatorConstraintInterface,
 } from 'class-validator';
 import { UsuarioService } from '../usuario.service';
+import { ListarUsuarioDTO } from '../dto/ListarUsuario.dto';
 
 @Injectable()
 @ValidatorConstraint({ async: true })
@@ -19,7 +20,7 @@ export class EmailEhUnicoValidator implements ValidatorConstraintInterface {
   async validate(value: any): Promise<boolean> {
     try {
       const usuarioComEmailExiste = await this.usuarioService.listarUsuarios(
-        value,
+        new ListarUsuarioDTO(null, null, value)
       );
       if (usuarioComEmailExiste) {
         throw new ConflictException('Email ' + value + ' já está em uso.');

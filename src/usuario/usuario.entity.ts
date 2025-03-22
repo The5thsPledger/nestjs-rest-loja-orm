@@ -9,6 +9,7 @@ import {
   PrimaryGeneratedColumn,
   ManyToMany,
   OneToMany,
+  Unique,
 } from 'typeorm';
 
 @Entity({ name: 'usuarios' })
@@ -20,6 +21,7 @@ export class UsuarioEntity {
   nome: string;
 
   @Column({ name: 'email', length: 70, nullable: false })
+  @Unique('email', ['email'])
   email: string;
 
   @Column({ name: 'senha', length: 255, nullable: false })
@@ -41,4 +43,8 @@ export class UsuarioEntity {
     nullable: true,
   })
   produto: ProdutoEntity[];
+
+  constructor(partial: Partial<UsuarioEntity> = {}) {
+    Object.assign(this, partial);
+  }
 }

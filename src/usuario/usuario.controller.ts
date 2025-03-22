@@ -14,7 +14,7 @@ import { AtualizaUsuarioDTO } from './dto/AtualizaUsuario.dto';
 import { CriaUsuarioDTO } from './dto/CriaUsuario.dto';
 import { UsuarioService } from './usuario.service';
 import { PermissaoUsuarioDTO } from 'src/perfil/dto/PermissaoUsuario.dto';
-import { ListaUsuarioDTO } from './dto/ListaUsuario.dto';
+import { ListarUsuarioDTO } from './dto/ListarUsuario.dto';
 import { CacheInterceptor } from '@nestjs/cache-manager';
 
 @Controller('/usuarios')
@@ -22,8 +22,8 @@ export class UsuarioController {
   constructor(private usuarioService: UsuarioService) {}
 
   @Post()
-  async criaUsuario(@Body() dadosDoUsuario: CriaUsuarioDTO) {
-    return await this.usuarioService.criaUsuario(dadosDoUsuario);
+  async criarUsuario(@Body() dadosDoUsuario: CriaUsuarioDTO) {
+    return await this.usuarioService.criarUsuario(dadosDoUsuario);
   }
 
   @Get()
@@ -31,7 +31,7 @@ export class UsuarioController {
   @CacheTTL(60 * 1000 * 15)
   async listarUsuarios(@Body('email') email: string = null) {
     const usuariosSalvos = await this.usuarioService.listarUsuarios(
-      new ListaUsuarioDTO(null, null, email),
+      new ListarUsuarioDTO(null, null, email),
     );
 
     return usuariosSalvos;

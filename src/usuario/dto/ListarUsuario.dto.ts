@@ -1,6 +1,6 @@
 import { ListaPerfilDTO } from 'src/perfil/dto/ListaPerfil.dto';
 
-export class ListaUsuarioDTO {
+export class ListarUsuarioDTO {
   constructor(
     readonly id?: string,
     readonly nome?: string,

@@ -70,7 +70,7 @@ export class ProdutoEntity {
   })
   fornecedor: FornecedorEntity;
 
-  constructor(partial: Partial<ProdutoEntity> = null) {
+  constructor(partial: Partial<ProdutoEntity> = {}) {
     Object.assign(this, partial);
   }
 }
