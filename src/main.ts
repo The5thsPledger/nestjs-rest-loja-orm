@@ -4,7 +4,7 @@ import { useContainer } from 'class-validator';
 import { AppModule } from './app.module';
 import { CustomExceptionFilter } from './exception.filter';
 
-async function bootstrap() {
+export async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
@@ -18,6 +18,11 @@ async function bootstrap() {
   );
   app.useGlobalFilters(new CustomExceptionFilter());
 
-  await app.listen(3000);
+  return app;
 }
-bootstrap();
+
+if (require.main === module) {
+  bootstrap().then(async app => {
+    await app.listen(3000);
+  });
+}

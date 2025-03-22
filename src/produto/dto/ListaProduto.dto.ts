@@ -1,13 +1,17 @@
 import { IsOptional, IsString } from 'class-validator';
 
 class ListaCaracteristicaProdutoDTO {
+  id: string;
   nome: string;
   descricao: string;
+  produto
 }
 
 class ListaImagemProdutoDTO {
+  id: string;
   url: string;
   descricao: string;
+  produto
 }
 
 export class ListaProdutoDTO {

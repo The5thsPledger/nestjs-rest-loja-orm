@@ -26,7 +26,9 @@ export class ProdutoEntity {
   @Column({ name: 'nome', length: 100, nullable: false })
   nome: string;
 
-  @Column({ name: 'valor', nullable: false })
+  @Column({ 
+    name: 'valor', type: 'decimal', precision: 10, scale: 2, default: 99999999.99, nullable: false
+  })
   valor: number;
 
   @Column({ name: 'quantidade', nullable: false })
@@ -67,4 +69,8 @@ export class ProdutoEntity {
     onUpdate: 'CASCADE',
   })
   fornecedor: FornecedorEntity;
+
+  constructor(partial: Partial<ProdutoEntity> = null) {
+    Object.assign(this, partial);
+  }
 }

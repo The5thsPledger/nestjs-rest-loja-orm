@@ -21,10 +21,9 @@ export class AtualizaProdutoDTO {
   @IsOptional()
   nome: string;
 
+  @IsOptional()
   @IsNumber({ maxDecimalPlaces: 2, allowNaN: false, allowInfinity: false })
-  @IsOptional()
   @Min(1, { message: 'O valor precisa ser maior que zero' })
-  @IsOptional()
   valor: number;
 
   @IsNumber()

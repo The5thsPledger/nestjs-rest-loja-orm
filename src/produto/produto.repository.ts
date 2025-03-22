@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { ProdutoEntity } from './produto.entity';
+import { ProdutoEntity } from './entities/produto.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FindManyOptions, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class ProdutoRepository {
@@ -11,7 +11,7 @@ export class ProdutoRepository {
   ) {}
 
   async salvar(produtoEntity: ProdutoEntity) {
-    await this.produtoRepository.save(produtoEntity);
+    return await this.produtoRepository.save(produtoEntity);
   }
 
   async listar(produtoEntity?: ProdutoEntity) {

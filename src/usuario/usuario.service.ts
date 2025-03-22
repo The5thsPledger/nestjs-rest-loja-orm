@@ -52,7 +52,7 @@ export class UsuarioService {
     } catch (exception) {
       return {
         mensagem: 'Erro inesperado ao salvar novo usuário.',
-        erro: exception.message,
+        erro: (exception as Error).message,
       };
     }
   }

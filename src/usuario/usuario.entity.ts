@@ -1,5 +1,5 @@
 import { PerfilEntity } from 'src/perfil/perfil.entity';
-import { ProdutoEntity } from 'src/produto/produto.entity';
+import { ProdutoEntity } from 'src/produto/entities/produto.entity';
 import {
   Entity,
   Column,

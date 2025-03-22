@@ -7,7 +7,7 @@ import {
   RequestTimeoutException,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
-import { Any, QueryFailedError } from 'typeorm';
+import { QueryFailedError } from 'typeorm';
 
 @Catch()
 export class CustomExceptionFilter implements ExceptionFilter {
@@ -22,7 +22,7 @@ export class CustomExceptionFilter implements ExceptionFilter {
       exception instanceof RequestTimeoutException
     ) {
       let exceptionResponse: any;
-      let detalhe;
+      let detalhe: string;
       if (exception instanceof HttpException) {
         exceptionResponse = exception.getResponse();
         detalhe = Array.isArray(exceptionResponse?.message)
@@ -41,7 +41,7 @@ export class CustomExceptionFilter implements ExceptionFilter {
         body: request.body,
       });
     } else if (exception instanceof QueryFailedError) {
-      const code = exception.driverError;
+      const code = exception.driverError.code;
       let status = 500;
       switch (code) {
         case 'ER_ACCESS_DENIED_ERROR':
@@ -67,6 +67,22 @@ export class CustomExceptionFilter implements ExceptionFilter {
         case 'ECONNABORTED':
           status = 412;
           msg = 'Conexão com o banco de dados abortada.';
+          break;
+        case '23502':
+          status = 412;
+          msg = 'Houve uma tentativa de inserir um valor nulo em uma coluna que não aceita valores nulos.';
+          break;
+        case '23503':
+          status = 412;
+          msg = 'Houve uma tentativa de inserir um valor que viola uma restrição de chave estrangeira.';
+          break;
+        case '23505':
+          status = 412;
+          msg = 'Houve uma tentativa de inserir um valor que viola uma restrição de chave única.';
+          break;
+        case '23514':
+          status = 412;
+          msg = 'Houve uma tentativa de inserir um valor que viola uma restrição de verificação.';
           break;
         default:
           msg = exception.message;

@@ -8,7 +8,7 @@ import {
   OneToMany,
   ManyToOne,
 } from 'typeorm';
-import { ProdutoEntity } from 'src/produto/produto.entity';
+import { ProdutoEntity } from 'src/produto/entities/produto.entity';
 import { UsuarioEntity } from 'src/usuario/usuario.entity';
 
 @Entity({ name: 'fornecedores' })
