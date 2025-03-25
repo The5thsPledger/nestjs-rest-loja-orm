@@ -10,8 +10,8 @@ import {
   JoinTable,
 } from 'typeorm';
 
-@Entity({ name: 'perfis' })
-export class PerfilEntity {
+@Entity({ name: 'permissao' })
+export class PermissaoEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -19,15 +19,15 @@ export class PerfilEntity {
   nome: string;
 
   @CreateDateColumn({ name: 'created_at' })
-  createdAt: string;
+  dataCriacao: Date;
 
   @UpdateDateColumn({ name: 'updated_at' })
-  updatedAt: string;
+  dataAtualizacao: Date;
 
   @DeleteDateColumn({ name: 'deleted_at' })
-  deletedAt: string;
+  dataExclusao: Date;
 
-  @ManyToMany(() => UsuarioEntity, (usuario) => usuario.perfis)
+  @ManyToMany(() => UsuarioEntity, (usuario) => usuario.permissoes)
   @JoinTable()
   usuarios: UsuarioEntity[];
 }

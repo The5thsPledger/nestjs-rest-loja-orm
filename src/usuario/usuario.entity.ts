@@ -1,4 +1,4 @@
-import { PerfilEntity } from 'src/perfil/perfil.entity';
+import { PermissaoEntity } from 'src/permissao/permissao.entity';
 import { ProdutoEntity } from 'src/produto/entities/produto.entity';
 import {
   Entity,
@@ -28,16 +28,16 @@ export class UsuarioEntity {
   senha: string;
 
   @CreateDateColumn({ name: 'created_at' })
-  createdAt: string;
+  dataCriacao: Date;
 
   @UpdateDateColumn({ name: 'updated_at' })
-  updatedAt: string;
+  dataAtualizacao: Date;
 
   @DeleteDateColumn({ name: 'deleted_at' })
-  deletedAt: string;
+  dataExclusao: Date;
 
-  @ManyToMany(() => PerfilEntity, (perfil) => perfil.usuarios, { eager: true })
-  perfis: PerfilEntity[];
+  @ManyToMany(() => PermissaoEntity, (perfil) => perfil.usuarios, { eager: true })
+  permissoes: PermissaoEntity[];
 
   @OneToMany(() => ProdutoEntity, (produto) => produto.usuario, {
     nullable: true,

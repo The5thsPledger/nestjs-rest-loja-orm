@@ -5,14 +5,14 @@ import { CacheModule } from '@nestjs/cache-manager';
 import { ProdutoModule } from './produto/produto.module';
 import { UsuarioModule } from './usuario/usuario.module';
 import { PostgresConfigService } from './config/postgres.config.service';
-import { PerfilModule } from './perfil/perfil.module';
+import { PermissaoModule } from './permissao/permissao.module';
 import dotenv from 'dotenv';
 import redisStore from 'cache-manager-redis-store';
 
 dotenv.config();
 @Module({
   imports: [
-    PerfilModule,
+    PermissaoModule,
     UsuarioModule,
     ProdutoModule,
     ConfigModule.forRoot({

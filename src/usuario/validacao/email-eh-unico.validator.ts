@@ -11,19 +11,20 @@ import {
 } from 'class-validator';
 import { UsuarioService } from '../usuario.service';
 import { ListarUsuarioDTO } from '../dto/ListarUsuario.dto';
+import { plainToInstance } from 'class-transformer';
 
 @Injectable()
 @ValidatorConstraint({ async: true })
 export class EmailEhUnicoValidator implements ValidatorConstraintInterface {
   constructor(private usuarioService: UsuarioService) {}
 
-  async validate(value: any): Promise<boolean> {
+  async validate(email: any): Promise<boolean> {
     try {
       const usuarioComEmailExiste = await this.usuarioService.listarUsuarios(
-        new ListarUsuarioDTO(null, null, value)
+        plainToInstance(ListarUsuarioDTO, { email: email })
       );
       if (usuarioComEmailExiste) {
-        throw new ConflictException('Email ' + value + ' já está em uso.');
+        throw new ConflictException('Email ' + email + ' já está em uso.');
       }
     } catch (exception) {
       if (exception instanceof NotFoundException) {

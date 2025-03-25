@@ -1,10 +1,10 @@
-import { ListaPerfilDTO } from 'src/perfil/dto/ListaPerfil.dto';
+import { IsOptional } from 'class-validator';
+import { UsuarioDTO } from './Usuario.dto';
 
-export class ListarUsuarioDTO {
-  constructor(
-    readonly id?: string,
-    readonly nome?: string,
-    readonly email?: string,
-    readonly permissoes?: ListaPerfilDTO[],
-  ) {}
+export class ListarUsuarioDTO extends UsuarioDTO{
+  @IsOptional()
+  nome: string;
+
+  @IsOptional()
+  email: string;
 }

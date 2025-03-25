@@ -5,22 +5,24 @@ import {
 } from '@nestjs/common';
 import {
   registerDecorator,
-  ValidationArguments,
   ValidationOptions,
   ValidatorConstraint,
   ValidatorConstraintInterface,
 } from 'class-validator';
-import { PerfilService } from '../perfil.service';
-import { ListaPerfilDTO } from '../dto/ListaPerfil.dto';
+import { PermissaoService } from '../permissao.service';
+import { ListarPermissaoDTO } from '../dto/ListarPermissao.dto';
+import { plainToInstance } from 'class-transformer';
 
 @Injectable()
 @ValidatorConstraint({ async: true })
 export class IsNomeUnicoValidator implements ValidatorConstraintInterface {
-  constructor(private perfilService: PerfilService) {}
+  constructor(private perfilService: PermissaoService) {}
 
   async validate(nome: string): Promise<boolean> {
     try {
-      if (await this.perfilService.listaPerfis(new ListaPerfilDTO(nome))) {
+      if (
+        await this.perfilService.listarPermissoes(plainToInstance(ListarPermissaoDTO, {nome: nome}))
+      ) {
         throw new ConflictException('Perfil ' + nome + ' já está em uso.');
       }
     } catch (exception) {
@@ -34,7 +36,7 @@ export class IsNomeUnicoValidator implements ValidatorConstraintInterface {
 }
 
 export const IsNomeUnico = (opcoesDeValidacao: ValidationOptions) => {
-  return (obj: Object, propriedade: string) => {
+  return (obj: { constructor: any; }, propriedade: string) => {
     registerDecorator({
       target: obj.constructor,
       propertyName: propriedade,

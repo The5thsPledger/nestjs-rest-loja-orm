@@ -5,19 +5,19 @@ import { EmailEhUnicoValidator } from './validacao/email-eh-unico.validator';
 import { UsuarioService } from './usuario.service';
 import { UsuarioEntity } from './usuario.entity';
 import { UsuarioRepository } from './usuario.repository';
-import { PerfilService } from 'src/perfil/perfil.service';
-import { PerfilRepository } from 'src/perfil/perfil.repository';
-import { PerfilEntity } from 'src/perfil/perfil.entity';
+import { PermissaoService } from 'src/permissao/permissao.service';
+import { PermissaoEntity } from 'src/permissao/permissao.entity';
+import { PermissaoRepository } from 'src/permissao/permissao.repository';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([UsuarioEntity, PerfilEntity])],
+  imports: [TypeOrmModule.forFeature([UsuarioEntity, PermissaoEntity])],
   controllers: [UsuarioController],
   providers: [
     UsuarioService,
     UsuarioRepository,
     EmailEhUnicoValidator,
-    PerfilService,
-    PerfilRepository,
+    PermissaoService,
+    PermissaoRepository,
   ],
 })
 export class UsuarioModule {}

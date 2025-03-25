@@ -5,20 +5,14 @@ import {
 } from '@nestjs/common';
 import { ListarUsuarioDTO } from './dto/ListarUsuario.dto';
 import { UsuarioEntity } from './usuario.entity';
-import { AtualizaUsuarioDTO } from './dto/AtualizaUsuario.dto';
+import { AtualizarUsuarioDTO } from './dto/AtualizarUsuario.dto';
 import { UsuarioRepository } from './usuario.repository';
-import { CriaUsuarioDTO } from './dto/CriaUsuario.dto';
-import { PermissaoUsuarioDTO } from 'src/perfil/dto/PermissaoUsuario.dto';
-import { PerfilService } from 'src/perfil/perfil.service';
-import { PerfilEntity } from 'src/perfil/perfil.entity';
-import { ListaPerfilDTO } from 'src/perfil/dto/ListaPerfil.dto';
+import { CriarUsuarioDTO } from './dto/CriarUsuario.dto';
+import { plainToInstance } from 'class-transformer';
 
 @Injectable()
 export class UsuarioService {
-  constructor(
-    private readonly usuarioRepository: UsuarioRepository,
-    private readonly perfilService: PerfilService,
-  ) {}
+  constructor(private readonly usuarioRepository: UsuarioRepository) {}
 
   async getUsuario(usuario: ListarUsuarioDTO = null) {
     const usuarioEntity = new UsuarioEntity(usuario);
@@ -30,14 +24,14 @@ export class UsuarioService {
     }
   }
 
-  async criarUsuario(dadosDoUsuario: CriaUsuarioDTO) {
+  async criarUsuario(dadosDoUsuario: CriarUsuarioDTO) {
     const usuarioEntity = new UsuarioEntity(dadosDoUsuario);
 
     try {
       await this.usuarioRepository.salvar(usuarioEntity);
 
       return {
-        usuario: new ListarUsuarioDTO(usuarioEntity.id, usuarioEntity.nome),
+        usuario: plainToInstance(ListarUsuarioDTO, {id: usuarioEntity.id, nome: usuarioEntity.nome}),
         messagem: 'usuário criado com sucesso',
       };
     } catch (exception) {
@@ -51,22 +45,16 @@ export class UsuarioService {
   async listarUsuarios(usuario?: ListarUsuarioDTO) {
     try {
       return (await this.getUsuario(usuario)).map(
-        (usuario) =>
-          new ListarUsuarioDTO(
-            usuario.id,
-            usuario.nome,
-            usuario.email,
-            usuario.perfis,
-          ),
+        (usuario) => plainToInstance(ListarUsuarioDTO, usuario)
       );
     } catch (exception) {
       throw exception;
     }
   }
 
-  async atualizaUsuario(id: string, novosDados: AtualizaUsuarioDTO) {
+  async atualizarUsuario(id: string, novosDados: AtualizarUsuarioDTO) {
     try {
-      await this.listarUsuarios(new ListarUsuarioDTO(id));
+      await this.listarUsuarios(plainToInstance(ListarUsuarioDTO, {id: id}));
     } catch (exception) {
       if (exception instanceof NotFoundException) {
         throw new BadRequestException(exception.message);
@@ -83,7 +71,7 @@ export class UsuarioService {
 
   async deletaUsuario(id: string) {
     try {
-      await this.listarUsuarios(new ListarUsuarioDTO(id));
+      await this.listarUsuarios(plainToInstance(ListarUsuarioDTO, {id: id}));
     } catch (exception) {
       if (exception instanceof NotFoundException) {
         throw new BadRequestException(exception.message);
@@ -92,35 +80,34 @@ export class UsuarioService {
     await this.usuarioRepository.deletar(id);
   }
 
-  async permissaoUsuario(permissaoUsuario: PermissaoUsuarioDTO) {
-    const perfis = await this.perfilService.listaPerfis(
-      new ListaPerfilDTO(null, permissaoUsuario.perfilID),
-    );
-    const usuario: UsuarioEntity = (
-      await this.getUsuario(new ListarUsuarioDTO(permissaoUsuario.usuarioID))
-    )[0];
+  // async permissaoUsuario(permissaoUsuario: PermissaoUsuarioDTO) {
+  //   const perfis = await this.perfilService.listarPermissoes(
+  //     plainToInstance(ListarPermissaoDTO, {perfilID: permissaoUsuario.permissaoID})
+  //   );
+  //   const usuario: UsuarioEntity = (
+  //     await this.getUsuario(plainToInstance(ListarUsuarioDTO, {usuarioID: permissaoUsuario.usuarioID})))[0];
 
-    if (usuario.perfis.length > 0) {
-      const perfil = usuario.perfis.find(
-        (perfil) => perfil.id == permissaoUsuario.perfilID,
-      );
+  //   if (usuario.permissoes.length > 0) {
+  //     const permissao = usuario.permissoes.find(
+  //       (permissao) => permissao.id == permissaoUsuario.permissaoID,
+  //     );
 
-      this.usuarioRepository.revogarPermissao(usuario, perfil);
-      return {
-        mensagem:
-          'Perfil ' + perfil.nome + ' revogado do usuário ' + usuario.nome,
-      };
-    } else {
-      const perfil = new PerfilEntity();
-      perfil.id = perfis[0].id;
-      perfil.nome = perfis[0].nome;
+  //     this.usuarioRepository.revogarPermissao(usuario, permissao);
+  //     return {
+  //       mensagem:
+  //         'Permissão ' + permissao.nome + ' revogada do usuário ' + usuario.nome,
+  //     };
+  //   } else {
+  //     const permissao = new PermissaoEntity();
+  //     permissao.id = perfis[0].id;
+  //     permissao.nome = perfis[0].nome;
 
-      this.usuarioRepository.concederPermissao(usuario, perfil);
+  //     this.usuarioRepository.concederPermissao(usuario, permissao);
 
-      return {
-        mensagem:
-          'Perfil ' + perfil.nome + ' concedido ao usuário ' + usuario.nome,
-      };
-    }
-  }
+  //     return {
+  //       mensagem:
+  //         'Permissão ' + permissao.nome + ' concedida ao usuário ' + usuario.nome,
+  //     };
+  //   }
+  // }
 }

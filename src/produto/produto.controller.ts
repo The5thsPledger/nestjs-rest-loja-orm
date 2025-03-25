@@ -10,24 +10,24 @@ import {
   UseInterceptors,
   ValidationPipe,
 } from '@nestjs/common';
-import { AtualizaProdutoDTO } from './dto/atualizaProduto.dto';
-import { CriaProdutoDTO } from './dto/CriaProduto.dto';
+import { AtualizarProdutoDTO } from './dto/AtualizarProduto.dto';
 import { ProdutoService } from './produto.service';
-import { ListaProdutoDTO } from './dto/ListaProduto.dto';
+import { ListarProdutoDTO } from './dto/ListarProduto.dto';
 import { CacheInterceptor } from '@nestjs/cache-manager';
+import { ProdutoDTO } from './dto/Produto.dto';
 @Controller('produtos')
 export class ProdutoController {
   constructor(private readonly produtoService: ProdutoService) {}
 
   @Post()
-  async criarProduto(@Body() dadosProduto: CriaProdutoDTO) {
+  async criarProduto(@Body() dadosProduto: ProdutoDTO) {
     return await this.produtoService.criarProduto(dadosProduto);
   }
 
   @Get()
   @UseInterceptors(CacheInterceptor)
   async listarTodos(
-    @Query(new ValidationPipe({ transform: true })) produto?: ListaProdutoDTO,
+    @Query(new ValidationPipe({ transform: true })) produto?: ListarProdutoDTO,
   ) {
     produto = produto.categoria || produto.id ? produto : null;
     return this.produtoService.listarProdutos(produto);
@@ -36,12 +36,10 @@ export class ProdutoController {
   @Put('/:id')
   async atualiza(
     @Param('id') id: string,
-    @Body() dadosProduto: AtualizaProdutoDTO,
+    @Body() dadosProduto: AtualizarProdutoDTO,
   ) {
-    const produtoAlterado = await this.produtoService.atualizaProduto(
-      id,
-      dadosProduto,
-    );
+    dadosProduto.id = id;
+    const produtoAlterado = await this.produtoService.atualizarProduto(dadosProduto);
 
     return {
       mensagem: 'produto atualizado com sucesso',

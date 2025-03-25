@@ -67,9 +67,9 @@ export class ProdutoRepository {
     return possivelProduto;
   }
 
-  async atualizar(id: string, dadosProduto: Partial<ProdutoEntity>) {
+  async atualizar(dadosProduto: Partial<ProdutoEntity>) {
     const dadosNaoAtualizaveis = ['id', 'usuario'];
-    const produto = this.buscaPorId(id);
+    const produto = this.buscaPorId(dadosProduto.id);
     Object.entries(dadosProduto).forEach(([chave, valor]) => {
       if (dadosNaoAtualizaveis.includes(chave)) {
         return;

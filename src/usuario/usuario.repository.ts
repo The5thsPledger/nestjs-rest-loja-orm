@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UsuarioEntity } from './usuario.entity';
 import { Repository } from 'typeorm';
-import { PerfilEntity } from 'src/perfil/perfil.entity';
+import { PermissaoEntity } from 'src/permissao/permissao.entity';
 
 @Injectable()
 export class UsuarioRepository {
@@ -53,15 +53,15 @@ export class UsuarioRepository {
     await this.usuarioRepository.delete(id);
   }
 
-  async revogarPermissao(usuario: UsuarioEntity, perfil: PerfilEntity) {
-    usuario.perfis = usuario.perfis.filter(
-      (perfilUsuario) => perfilUsuario.id != perfil.id,
+  async revogarPermissao(usuario: UsuarioEntity, permissao: PermissaoEntity) {
+    usuario.permissoes = usuario.permissoes.filter(
+      (permissaoUsuario) => permissaoUsuario.id != permissao.id,
     );
     this.usuarioRepository.save(usuario);
   }
 
-  async concederPermissao(usuario: UsuarioEntity, perfil: PerfilEntity) {
-    usuario.perfis.push(perfil);
+  async concederPermissao(usuario: UsuarioEntity, permissao: PermissaoEntity) {
+    usuario.permissoes.push(permissao);
     this.usuarioRepository.save(usuario);
   }
 }

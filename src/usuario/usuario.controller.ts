@@ -5,24 +5,23 @@ import {
   Delete,
   Get,
   Param,
-  Patch,
   Post,
   Put,
   UseInterceptors,
 } from '@nestjs/common';
-import { AtualizaUsuarioDTO } from './dto/AtualizaUsuario.dto';
-import { CriaUsuarioDTO } from './dto/CriaUsuario.dto';
+import { AtualizarUsuarioDTO } from './dto/AtualizarUsuario.dto';
+import { CriarUsuarioDTO } from './dto/CriarUsuario.dto';
 import { UsuarioService } from './usuario.service';
-import { PermissaoUsuarioDTO } from 'src/perfil/dto/PermissaoUsuario.dto';
 import { ListarUsuarioDTO } from './dto/ListarUsuario.dto';
 import { CacheInterceptor } from '@nestjs/cache-manager';
+import { plainToInstance } from 'class-transformer';
 
 @Controller('/usuarios')
 export class UsuarioController {
   constructor(private usuarioService: UsuarioService) {}
 
   @Post()
-  async criarUsuario(@Body() dadosDoUsuario: CriaUsuarioDTO) {
+  async criarUsuario(@Body() dadosDoUsuario: CriarUsuarioDTO) {
     return await this.usuarioService.criarUsuario(dadosDoUsuario);
   }
 
@@ -31,7 +30,7 @@ export class UsuarioController {
   @CacheTTL(60 * 1000 * 15)
   async listarUsuarios(@Body('email') email: string = null) {
     const usuariosSalvos = await this.usuarioService.listarUsuarios(
-      new ListarUsuarioDTO(null, null, email),
+      plainToInstance(ListarUsuarioDTO, { email: email })
     );
 
     return usuariosSalvos;
@@ -40,9 +39,9 @@ export class UsuarioController {
   @Put('/:id')
   async atualizarUsuario(
     @Param('id') id: string,
-    @Body() novosDados: AtualizaUsuarioDTO,
+    @Body() novosDados: AtualizarUsuarioDTO,
   ) {
-    const usuarioAtualizado = await this.usuarioService.atualizaUsuario(
+    const usuarioAtualizado = await this.usuarioService.atualizarUsuario(
       id,
       novosDados,
     );
@@ -61,10 +60,5 @@ export class UsuarioController {
       usuario: usuarioRemovido,
       messagem: 'usuário removido com suceso',
     };
-  }
-
-  @Patch()
-  async permissaoUsuario(@Body() permissaoUsuario: PermissaoUsuarioDTO) {
-    return await this.usuarioService.permissaoUsuario(permissaoUsuario);
   }
 }

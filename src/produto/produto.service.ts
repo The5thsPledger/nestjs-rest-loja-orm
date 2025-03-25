@@ -1,11 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { ProdutoEntity } from './entities/produto.entity';
-import { AtualizaProdutoDTO } from './dto/AtualizaProduto.dto';
+import { AtualizarProdutoDTO } from './dto/AtualizarProduto.dto';
 import { ProdutoRepository } from './produto.repository';
-import { CriaProdutoDTO } from './dto/CriaProduto.dto';
 import { UsuarioService } from 'src/usuario/usuario.service';
-import { ListarUsuarioDTO } from 'src/usuario/dto/ListarUsuario.dto';
-import { ListaProdutoDTO } from './dto/ListaProduto.dto';
+import { ListarProdutoDTO } from './dto/ListarProduto.dto';
+import { ProdutoDTO } from './dto/Produto.dto';
 
 @Injectable()
 export class ProdutoService {
@@ -14,17 +13,17 @@ export class ProdutoService {
     private usuarioService: UsuarioService
   ) {}
 
-  async criarProduto(dadosProduto: CriaProdutoDTO) {
+  async criarProduto(dadosProduto: ProdutoDTO) {
     const produto = new ProdutoEntity(dadosProduto);
-    produto.usuario = (
-      await this.usuarioService.getUsuario(
-        new ListarUsuarioDTO(dadosProduto.usuarioId),
-      )
-    )[0];
+    // produto.usuario = (
+    //   await this.usuarioService.getUsuario(
+    //     plainToInstance(ListarUsuarioDTO, {usuarioId: dadosProduto.usuarioId})
+    //   )
+    // )[0];
     return await this.produtoRepository.salvar(produto);
   }
 
-  async listarProdutos(produto?: ListaProdutoDTO) {
+  async listarProdutos(produto?: ListarProdutoDTO) {
     let produtoEntity: ProdutoEntity = null;
     if (produto) {
       produtoEntity = new ProdutoEntity(produto);
@@ -35,8 +34,8 @@ export class ProdutoService {
     return await this.produtoRepository.listar(produtoEntity);
   }
 
-  async atualizaProduto(id: string, novosDados: AtualizaProdutoDTO) {
-    const entityName = await this.produtoRepository.atualizar(id, novosDados);
+  async atualizarProduto(novosDados: AtualizarProdutoDTO) {
+    const entityName = await this.produtoRepository.atualizar(new ProdutoEntity(novosDados));
     Object.assign(entityName, novosDados);
     await this.produtoRepository.salvar(entityName);
   }
