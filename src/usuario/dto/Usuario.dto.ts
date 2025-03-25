@@ -1,5 +1,8 @@
 import { Type } from "class-transformer";
-import { ArrayMinSize, ArrayNotEmpty, IsArray, IsEmail, IsNotEmpty, IsOptional, IsUUID, MaxLength, MinLength, ValidateNested } from "class-validator";
+import { 
+    ArrayMinSize, ArrayNotEmpty, IsArray, IsEmail, IsNotEmpty, IsOptional, 
+    IsString, IsUUID, MaxLength, ValidateNested 
+} from "class-validator";
 import { PermissaoDTO } from "src/permissao/dto/Permissao.dto";
 
 export class UsuarioDTO {
@@ -9,34 +12,20 @@ export class UsuarioDTO {
     id: string;
     
     @IsNotEmpty()
+    @IsString()
+    @MaxLength(100, { message: 'Nome não pode ter mais que 100 caracteres' })
     nome: string;
 
-    @IsEmail(undefined, { message: 'O e-mail informado é inválido' })
     @IsNotEmpty()
+    @MaxLength(70, { message: 'E-mail não pode ter mais que 70 caracteres' })
+    @IsEmail(undefined, { message: 'O e-mail informado é inválido' })
     email: string;
 
-    @IsNotEmpty({ message: 'Senha não pode ser vazia' })
-    @MaxLength(255, { message: 'Senha não pode ter mais que 255 caracteres' })
-    @MinLength(6, { message: 'A senha precisa ter pelo menos 6 caracteres' })
-    senha: string;
-
-    @IsOptional()
-    @IsNotEmpty({ message: 'Data de criação não pode ser vazia' })
-    dataCriacao: Date;
-
-    @IsOptional()
-    @IsNotEmpty({ message: 'Data de atualização não pode ser vazia' })
-    dataAtualizacao: Date;
-
-    @IsOptional()
-    @IsNotEmpty({ message: 'Data de exclusão não pode ser vazia' })
-    dataExclusao: Date;
-
-    @IsOptional()
+    @IsNotEmpty()
     @IsArray()
     @ArrayNotEmpty()
     @ArrayMinSize(1)
     @ValidateNested()
     @Type(() => PermissaoDTO)
-    listaDePermissoes?: PermissaoDTO[]
+    permissoes = new Array<PermissaoDTO>();
 }

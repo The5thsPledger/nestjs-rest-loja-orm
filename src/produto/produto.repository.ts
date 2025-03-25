@@ -14,7 +14,7 @@ export class ProdutoRepository {
     return await this.produtoRepository.save(produtoEntity);
   }
 
-  async listar(produtoEntity?: ProdutoEntity) {
+  async listarProduto(produtoEntity?: ProdutoEntity) {
     let produto = new Array<ProdutoEntity>();
     const msg = new Array<string>();
     let categoria: string = null;

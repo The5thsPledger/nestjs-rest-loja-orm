@@ -24,17 +24,17 @@ export class UsuarioEntity {
   @Unique('email', ['email'])
   email: string;
 
-  @Column({ name: 'senha', length: 255, nullable: false })
-  senha: string;
+  @Column({ name: 'senha', length: 255, nullable: false, select: false })
+  senha?: string;
 
-  @CreateDateColumn({ name: 'created_at' })
-  dataCriacao: Date;
+  @CreateDateColumn({ name: 'created_at', select: false })
+  dataCriacao?: Date;
 
-  @UpdateDateColumn({ name: 'updated_at' })
-  dataAtualizacao: Date;
+  @UpdateDateColumn({ name: 'updated_at', select: false })
+  dataAtualizacao?: Date;
 
-  @DeleteDateColumn({ name: 'deleted_at' })
-  dataExclusao: Date;
+  @DeleteDateColumn({ name: 'deleted_at', select: false })
+  dataExclusao?: Date;
 
   @ManyToMany(() => PermissaoEntity, (perfil) => perfil.usuarios, { eager: true })
   permissoes: PermissaoEntity[];
@@ -42,7 +42,7 @@ export class UsuarioEntity {
   @OneToMany(() => ProdutoEntity, (produto) => produto.usuario, {
     nullable: true,
   })
-  produto: ProdutoEntity[];
+  produtos?: ProdutoEntity[];
 
   constructor(partial: Partial<UsuarioEntity> = {}) {
     Object.assign(this, partial);

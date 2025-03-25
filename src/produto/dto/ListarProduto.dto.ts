@@ -3,8 +3,8 @@ import { ProdutoDTO } from './Produto.dto';
 
 export class ListarProdutoDTO extends ProdutoDTO {
   @IsOptional()
-  nome?: string;
+  nome: string;
 
   @IsOptional()
-  categoria?: string;
+  categoria: string;
 }

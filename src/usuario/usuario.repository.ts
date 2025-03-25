@@ -16,7 +16,7 @@ export class UsuarioRepository {
   }
 
   async listar(usuarioEntity?: UsuarioEntity) {
-    let usuario = new Array<UsuarioEntity>();
+    let usuarios = new Array<UsuarioEntity>();
     const msg = new Array<string>();
     if (usuarioEntity) {
       if (usuarioEntity.id) {
@@ -26,21 +26,18 @@ export class UsuarioRepository {
         msg.push(' com o email ' + usuarioEntity.email);
       }
 
-      usuario.push(
-        await this.usuarioRepository.findOne({
-          where: {
-            email: usuarioEntity.email,
-            id: usuarioEntity.id,
-          },
-        }),
+      usuarios.push(
+        await this.usuarioRepository.findOneBy(usuarioEntity),
       );
-    } else {
-      usuario = await this.usuarioRepository.find();
+    } 
+    else {
+      usuarios = await this.usuarioRepository.find();
     }
 
-    if (usuario[0]) {
-      return usuario;
-    } else {
+    if (usuarios[0]) {
+      return usuarios
+    } 
+    else {
       throw new NotFoundException('Não encontrado nenhum usuário' + msg + '.');
     }
   }
@@ -53,15 +50,15 @@ export class UsuarioRepository {
     await this.usuarioRepository.delete(id);
   }
 
-  async revogarPermissao(usuario: UsuarioEntity, permissao: PermissaoEntity) {
-    usuario.permissoes = usuario.permissoes.filter(
+  async revogarPermissao(usuarios: UsuarioEntity, permissao: PermissaoEntity) {
+    usuarios.permissoes = usuarios.permissoes.filter(
       (permissaoUsuario) => permissaoUsuario.id != permissao.id,
     );
-    this.usuarioRepository.save(usuario);
+    this.usuarioRepository.save(usuarios);
   }
 
-  async concederPermissao(usuario: UsuarioEntity, permissao: PermissaoEntity) {
-    usuario.permissoes.push(permissao);
-    this.usuarioRepository.save(usuario);
+  async concederPermissao(usuarios: UsuarioEntity, permissao: PermissaoEntity) {
+    usuarios.permissoes.push(permissao);
+    this.usuarioRepository.save(usuarios);
   }
 }

@@ -31,7 +31,7 @@ export class ProdutoService {
       produtoEntity.categoria = produto.categoria;
     }
 
-    return await this.produtoRepository.listar(produtoEntity);
+    return await this.produtoRepository.listarProduto(produtoEntity);
   }
 
   async atualizarProduto(novosDados: AtualizarProdutoDTO) {

@@ -10,8 +10,8 @@ import {
   ValidatorConstraintInterface,
 } from 'class-validator';
 import { PermissaoService } from '../permissao.service';
-import { ListarPermissaoDTO } from '../dto/ListarPermissao.dto';
 import { plainToInstance } from 'class-transformer';
+import { PermissaoDTO } from '../dto/Permissao.dto';
 
 @Injectable()
 @ValidatorConstraint({ async: true })
@@ -21,7 +21,7 @@ export class IsNomeUnicoValidator implements ValidatorConstraintInterface {
   async validate(nome: string): Promise<boolean> {
     try {
       if (
-        await this.perfilService.listarPermissoes(plainToInstance(ListarPermissaoDTO, {nome: nome}))
+        await this.perfilService.listarPermissoes(plainToInstance(PermissaoDTO, {nome: nome}))
       ) {
         throw new ConflictException('Perfil ' + nome + ' já está em uso.');
       }

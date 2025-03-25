@@ -38,19 +38,19 @@ export class ProdutoEntity {
   @Column({ name: 'categoria', length: 100, nullable: false })
   categoria: string;
   
-  @CreateDateColumn({ name: 'created_at' })
-  createdAt: string;
-  
-  @UpdateDateColumn({ name: 'updated_at' })
-  updatedAt: string;
-  
-  @DeleteDateColumn({ name: 'deleted_at' })
-  deletedAt: string;
-  
-  @ManyToOne(() => UsuarioEntity, (usuario) => usuario.produto, {
+  @CreateDateColumn({ name: 'created_at', select: false })
+  dataCriacao?: Date;
+
+  @UpdateDateColumn({ name: 'updated_at', select: false })
+  dataAtualizacao?: Date;
+
+  @DeleteDateColumn({ name: 'deleted_at', select: false })
+  dataExclusao?: Date;
+
+  @ManyToOne(() => UsuarioEntity, (usuario) => usuario.produtos, {
     nullable: false,
   })
-  usuario: UsuarioEntity;
+  usuario?: UsuarioEntity;
 
   @OneToMany(
     () => ProdutoImagemEntity,

@@ -9,7 +9,6 @@ import {
   Put,
   UseInterceptors,
 } from '@nestjs/common';
-import { AtualizarUsuarioDTO } from './dto/AtualizarUsuario.dto';
 import { CriarUsuarioDTO } from './dto/CriarUsuario.dto';
 import { UsuarioService } from './usuario.service';
 import { ListarUsuarioDTO } from './dto/ListarUsuario.dto';
@@ -29,17 +28,18 @@ export class UsuarioController {
   @UseInterceptors(CacheInterceptor)
   @CacheTTL(60 * 1000 * 15)
   async listarUsuarios(@Body('email') email: string = null) {
-    const usuariosSalvos = await this.usuarioService.listarUsuarios(
-      plainToInstance(ListarUsuarioDTO, { email: email })
-    );
-
-    return usuariosSalvos;
+    let filtro: ListarUsuarioDTO = null;
+    if (email) {
+      filtro = plainToInstance(ListarUsuarioDTO, { email: email })
+    }
+    
+    return await this.usuarioService.listarUsuarios(filtro);
   }
 
   @Put('/:id')
   async atualizarUsuario(
     @Param('id') id: string,
-    @Body() novosDados: AtualizarUsuarioDTO,
+    @Body() novosDados: Partial<CriarUsuarioDTO>,
   ) {
     const usuarioAtualizado = await this.usuarioService.atualizarUsuario(
       id,

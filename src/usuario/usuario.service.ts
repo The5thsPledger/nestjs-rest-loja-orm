@@ -5,7 +5,6 @@ import {
 } from '@nestjs/common';
 import { ListarUsuarioDTO } from './dto/ListarUsuario.dto';
 import { UsuarioEntity } from './usuario.entity';
-import { AtualizarUsuarioDTO } from './dto/AtualizarUsuario.dto';
 import { UsuarioRepository } from './usuario.repository';
 import { CriarUsuarioDTO } from './dto/CriarUsuario.dto';
 import { plainToInstance } from 'class-transformer';
@@ -15,7 +14,11 @@ export class UsuarioService {
   constructor(private readonly usuarioRepository: UsuarioRepository) {}
 
   async getUsuario(usuario: ListarUsuarioDTO = null) {
-    const usuarioEntity = new UsuarioEntity(usuario);
+    let usuarioEntity = null
+    if (usuarioEntity) {
+      usuarioEntity = new UsuarioEntity(usuario);
+    }
+
     try {
       return await this.usuarioRepository.listar(usuarioEntity);
     } 
@@ -52,7 +55,7 @@ export class UsuarioService {
     }
   }
 
-  async atualizarUsuario(id: string, novosDados: AtualizarUsuarioDTO) {
+  async atualizarUsuario(id: string, novosDados: Partial<CriarUsuarioDTO>) {
     try {
       await this.listarUsuarios(plainToInstance(ListarUsuarioDTO, {id: id}));
     } catch (exception) {

@@ -17,5 +17,5 @@ export class ProdutoCaracteristicaEntity {
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',
   })
-  produto: ProdutoEntity;
+  produto?: ProdutoEntity;
 }
