@@ -17,7 +17,24 @@ export async function bootstrap() {
     }),
   );
   app.useGlobalFilters(new CustomExceptionFilter());
-
+  app.enableCors();
+  app.setGlobalPrefix('api');
+  app.enableShutdownHooks();
+  app.use(
+    (
+      req: { method: string; }, 
+      res: { setHeader: (arg0: string, arg1: string) => void; sendStatus: (arg0: number) => any; }, 
+      next: () => void
+    ) => {
+      res.setHeader('Access-Control-Allow-Origin', '*');
+      res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+      res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+      if (req.method === 'OPTIONS') {
+        return res.sendStatus(200);
+      }
+      next();
+    }
+);
   return app;
 }
 

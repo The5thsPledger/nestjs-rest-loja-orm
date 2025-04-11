@@ -15,7 +15,7 @@ export class UsuarioService {
 
   async getUsuario(usuario: ListarUsuarioDTO = null) {
     let usuarioEntity = null
-    if (usuarioEntity) {
+    if (usuario) {
       usuarioEntity = new UsuarioEntity(usuario);
     }
 

@@ -7,5 +7,5 @@ export class PermissaoDTO {
     id: string;
 
     @IsNotEmpty({ message: 'Nome do perfil não pode ser vazio' })
-    nome = 'Default';
+    nome: string;
 }

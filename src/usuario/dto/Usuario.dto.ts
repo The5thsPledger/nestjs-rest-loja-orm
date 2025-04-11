@@ -27,5 +27,5 @@ export class UsuarioDTO {
     @ArrayMinSize(1)
     @ValidateNested()
     @Type(() => PermissaoDTO)
-    permissoes = new Array<PermissaoDTO>();
+    permissoes: Array<PermissaoDTO>;
 }
