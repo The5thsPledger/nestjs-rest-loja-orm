@@ -3,6 +3,7 @@ import { ArrayMinSize, ArrayNotEmpty, IsArray, IsNotEmpty, IsNumber, IsOptional,
 import { ProdutoImagemDTO } from "./ProdutoImagem.dto";
 import { ProdutoCaracteristicaDTO } from "./ProdutoCaracteristica.dto";
 import { FornecedorDTO } from "src/fornecedor/dto/Fornecedor.dto";
+import { UsuarioDTO } from "src/usuario/dto/Usuario.dto";
 
 export class ProdutoDTO {
     @IsOptional()
@@ -33,6 +34,9 @@ export class ProdutoDTO {
     @IsString()
     categoria: string;
 
+    @IsNotEmpty({ message: 'Usuário do produto não pode ser vazio' })
+    usuario: UsuarioDTO;
+    
     @IsNotEmpty({ message: 'Imagens do produto não podem ser vazias' })
     @IsArray()
     @ArrayNotEmpty({ message: 'O produto precisa ter pelo menos uma imagem' })

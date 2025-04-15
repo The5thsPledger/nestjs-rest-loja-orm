@@ -50,7 +50,7 @@ export class ProdutoEntity {
   @ManyToOne(() => UsuarioEntity, (usuario) => usuario.produtos, {
     nullable: false,
   })
-  usuario?: UsuarioEntity;
+  usuario: UsuarioEntity;
 
   @OneToMany(
     () => ProdutoImagemEntity,
