@@ -35,7 +35,7 @@ export class UsuarioService {
 
       return {
         usuario: plainToInstance(ListarUsuarioDTO, {id: usuarioEntity.id, nome: usuarioEntity.nome}),
-        messagem: 'usuário criado com sucesso',
+        mensagem: 'Usuário criado com sucesso',
       };
     } catch (exception) {
       return {
